@@ -1,0 +1,42 @@
+
+[background-color="hsl(50, 89%, 74%)"]
+= Hello!
+
+== Olivier VERNIN
+[.right.text-center]
+image::{imagedir}/overnin.png[height="200",float="left"]
+
+* *Operation Engineer* @ CloudBees
+* Contact:
+** Twitter: link:https://twitter.com/0lblak[@0lblak]
+** Github: link:https://github.com/olblak[olblak]
+** Linkedin: link:https://www.linkedin.com/in/overnin/[overnin]
+** E-Mail: overnin@cloudbees.com
+
+== Damien DUPORTAL
+[.right.text-center]
+image::{imagedir}/damien.jpg[height="400",float="left"]
+
+* *Training Engineer* @ CloudBees
+** Docker & Apple fanboy.
+** Human stack focused
+** Rock climber
+* Contact:
+** Twitter: link:https://twitter.com/DamienDuportal[@DamienDuportal]
+** Github: link:https://github.com/dduportal[dduportal]
+** E-Mail: damien.duportal@gmail.com
+
+== !
+
+image::{imagedir}/Presentation-CloudBees.jpg[]
+
+== And you?
+[.left.text-center]
+image::{imagedir}/commitstrip.png[width="200"]
+
+* Developers?
+* Who is doing Continuous Integration/Delivery/Deployment?
+** Which tools?
+*** Jenkins "Old School" ? / "New Generation" ?
+*** GitLab ? TeamCity ? TravisCI ? Bamboo ?
+*** Something Else?
