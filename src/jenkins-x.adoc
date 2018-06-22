@@ -3,7 +3,7 @@ include::{chaptersdir}/attributes.adoc[]
 
 = Jeudi du libre Mons: Juin 2018
 
-Jenkins with Docker, Jenkins-X and Jenkins Configuration-as-Code
+Jenkins-X
 
 ++++
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">

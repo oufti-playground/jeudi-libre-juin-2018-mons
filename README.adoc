@@ -31,3 +31,9 @@ make
 ----
 
 ** Open the resulting file `./dist/index.html`
+
+* "The poor's person live-reload"
+** No tools for live-reload here... yet
+** "Poor's person" commands:
+*** `watch make document`
+*** AND `open ./dist/index.html`
