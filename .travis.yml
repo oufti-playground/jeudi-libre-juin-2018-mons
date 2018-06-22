@@ -1,0 +1,18 @@
+
+services:
+- docker
+
+script:
+- make documents
+- make verify
+
+deploy:
+  provider: pages
+  local-dir: ./dist/
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  keep-history: true
+  target-branch: gh-pages
+  verbose: true
+  on:
+    branch: master
