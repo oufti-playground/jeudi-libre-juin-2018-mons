@@ -1,5 +1,8 @@
+include::./content/attributes.adoc[]
 
 = Jeudi du libre Mons: Juin 2018
+
+== Agenda
 
 * Workshop:
 . link:introduction-to-docker.html[Introduction to Docker,window=_blank]
