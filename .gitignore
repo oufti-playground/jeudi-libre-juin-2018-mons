@@ -2,3 +2,8 @@
 *.zip
 *gz
 dist/
+.terraform
+*.box
+*.zip
+*.gz
+*.tgz
