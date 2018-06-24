@@ -1,0 +1,103 @@
+
+==  Docker: 101
+
+== Pourquoi Docker ?
+
+Quel est le problème que nous essayons de résoudre ?
+
+![Docker Challenge](images/docker-the-challenge.png)
+
+== "Matrix from Hell"
+
+Problème de temps **exponentiel**
+
+![Matrix-Hell](images/the-matrix-from-hell.png)
+
+
+== Déjà vu ?
+
+L'IT n'est pas la seule industrie à résoudre des problèmes...
+
+![Transport Analogy](images/also-a-matrix-from-hell.png)
+
+== Solution: Le container intermodal
+
+"Separation of Concerns"
+
+![Container](images/blue-shipping-container.png)
+
+== Comment ça marche ?
+
+"Virtualisation **Légère**"
+![Container vs VMs](images/container_vs_vm.jpg)
+
+== Comment ça marche ?
+
+"Pourquoi **Léger**" ?
+
+![Why Lightweight](images/why-docker-lightweight.jpg)
+
+== Comment ça marche ?
+
+* Linux Kernel requis (ou presque... Windows...)
+* Linux containers: "super" chroot
+  - "Namespacing": isolation (users, réseau, PIDs ...)
+  - "Control Groups": gestion et contrôle (CPU, mem ...)
+* Système de fichier de type "Union File System"
+* Process **PID 1** et ses enfants _dans_ le container
+
+
+![Docker Container](images/docker-image-creation-01-little.png)
+
+== Docker workflow
+
+Workflow Docker basique:
+
+![Docker Workflow](images/basics-of-docker-system.png)
+
+== Exemple: mise à jour d'une application
+
+![Docker App Update](images/changes-and-updates.png)
+
+== Docker Inc.
+
+* Fondé à Paris en 2008 par Solomon Hykes
+* Migre à San Fransisco en 2009
+* 2013: Open-source le projet Docker
+* 2014: dotCloud devient Docker
+* 2016: 1 milliard de levée de fond
+
+== Docker Project
+
+* Originellement écrit en Python au sein de dotCloud
+* Ré-écrit en **Golang** et _ouvert_ en 2013 après une "PyCon"
+* Open Source - [Apache licence](https://github.com/docker/docker/blob/master/LICENSE)
+* Disponible sur Github: https://github.com/docker/docker-ce
+* 2017:
+  - Projet "Moby": https://github.com/moby/moby
+  - Docker CE/EE (Community/Enterprise)
+* ~22 K commits, +1400 contributeurs
+
+
+== Résumé
+
+_Objectif de Docker :_
+
+![Docker Goal](images/docker-build-ship-run.png)
+
+== Container are NOT VMs
+
+"Separation of concerns": 1 "tâche" par containeur
+
+![Container are NOT VMs](images/vm-and-container.png)
+
+
+== VM et containeurs non exclusifs mutuellement
+
+![Container are NOT VMs](images/cont-vm-not-excl.png)
+
+== Docker: Bases
+
+== Un peu d'action !
+
+<!-- // http://play-with-docker.com/ -->

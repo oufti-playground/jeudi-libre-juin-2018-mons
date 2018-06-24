@@ -1,0 +1,83 @@
+
+
+== Docker: Écosystème
+
+
+
+= Docker: bases
+== Docker avancé
+== Docker: Écosystème
+== Compose
+
+== Compose 1/2
+
+* Compose est un client Docker, qui va exécuter les commandes pour vous
+* Source: fichier au format YAML:
+
+```
+version: "2"
+
+volumes:
+  db-data:
+
+networks:
+  front-tier:
+  back-tier:
+
+services:
+  vote:
+    build: ./vote
+    ports:
+      - "5000:80"
+    networks:
+      - front-tier
+      - back-tier
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - db-data:/var/redis
+    networks:
+      - back-tier
+```
+
+
+
+= Docker: bases
+== Docker avancé
+== Docker: Écosystème
+== Compose
+
+== Compose 2/2
+
+* Commande `docker-compose`
+* Gestion intelligente des cycles de vie:
+  - Mise à jour d'une image sans toucher au contenu du data volume
+* Scaling des containeurs
+  - Ne gère PAS le routage pour vous !
+
+* Futur: intelligence vers le Docker Daemon avec la commande `docker service`
+  - Conversion des YAML vers le Docker Daemon
+
+
+
+= Docker: bases
+== Docker avancé
+== Docker: Écosystème
+== Compose
+== Swarm
+
+== Swarm 1/2
+
+![Swarm](images/docker-swarm-1.jpg)
+
+
+= Docker: bases
+== Docker avancé
+== Docker: Écosystème
+== Compose
+== Swarm
+
+== Swarm 2/2
+
+<img alt="Swarm Arch" src="images/swarm-arch.png" width=600/>

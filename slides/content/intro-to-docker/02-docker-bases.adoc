@@ -1,0 +1,209 @@
+
+= Docker: bases
+
+== Obtenir Docker
+
+* Un bac à sable est disponible sur http://play-with-docker.com/
+  - Cliquez sur "Login" -> "docker"
+  - Vous allez devoir vous créer un compte sur le Docker Hub
+  - Vous aurez ensuite 4 heures pour jouer avec des "instances Docker"
+  - Cliquez sur le bouton "Add a new instance"
+  - Une machine démarre, vous avez accès à la ligne de commande
+* Page officielle d'installation: https://www.docker.com/products/overview
+  - Linux: Utilisez votre gestionnaire de paquetage
+  - MacOS and Windows: des installateurs "natifs" sont proposés
+  - Vous pouvez utiliser une VM ou un service préconfiguré dans le Cloud de votre choix (Amazon, Azure, OVH, etc.)
+
+== Vocabulaire
+
+* **Docker Image :** Modèle (template) de base, représentant une application
+
+* **Docker Container :** Unité d'exécution standard, instanciée depuis une image
+
+* **Docker Engine :** Service responsable de créer, déployer et exécuter les containeurs Docker sur un host physique, virtuel, distant ou local
+
+* **Registry Service (Docker Hub or Docker Trusted Registry) :**
+Service de stockage et de distribution des images
+
+== Docker Images
+
+* **Docker Image :** c'est le modèle de base
+
+* Nommage: `[REGISTRY/][NAMESPACE/]NAME[:TAG|@DIGEST]`
+  - Pas de Registre ? Défaut: `registry.hub.docker.io`
+  - Pas de Namespace ? Défaut: `library`
+  - Pas de tag ? Valeur par défaut: `latest` - ATTENTION !
+  - Digest: signature unique basée sur le contenu
+
+[source,bash]
+----
+$ docker image ls
+
+$ docker pull alpine:3.4
+$ docker image ls # Quelles différences ?
+
+$ docker pull alpine:latest
+$ docker pull jfrog-docker-reg2.bintray.io/jfrog/artifactory-oss
+$ docker image ls # Quelles différences ?
+
+$ docker tag alpine:3.4 my-alpine:3.4.0-local
+$ docker tag jfrog-docker-reg2.bintray.io/jfrog/artifactory-oss \
+  artifactory-local
+$ docker image ls # Quelles différences ?
+----
+
+== Docker Containers 1/2
+
+* **Docker Containers :** c'est l'unité d'exécution, instanciée depuis une image.
+
+[source,bash]
+----
+$ docker ps
+$ docker run alpine:3.4 echo "Bonjour depuis un containeur"
+
+$ cat /etc/os-release
+$ docker run -ti alpine:3.4 /bin/sh
+#/ cat /etc/os-release
+#/ whoami
+#/ ps aux
+#/ exit
+
+$ docker run -d nginx:1.10-alpine
+$ docker run -d --name webserver-1 nginx:1.10-alpine
+$ docker ps
+
+$ docker inspect nginx:1.10-alpine  # IMAGE
+$ docker inspect webserver-1        # Container
+
+# Explorons d'autres options
+$ docker ps -a
+$ docker ps -q
+----
+
+== Docker Containers 2/2
+
+[source,bash]
+----
+# Cycle de vie
+$ docker run -d --name webserver-2 nginx:1.10-alpine
+$ docker ps
+$ docker stop webserver-2
+$ docker ps
+$ docker start webserver-2
+$ docker ps
+$ docker kill webserver-2
+$ docker ps
+
+# Accès au containeur
+$ docker run -d --name db-server postgres
+$ docker ps
+
+$ ps faux
+
+$ docker exec db-server ps faux
+
+$ docker exec -ti db-server sh
+root@5da9f26d72c3:/# ps faux
+root@5da9f26d72c3:/# exit
+
+----
+
+== Docker Network
+
+* Docker utilise du **NAT** par défaut:
+
+[source,bash]
+----
+$ docker run -d --name webserver-3 -p 8000:80 nginx:1.10-alpine
+
+$ docker inspect --format '{{ .NetworkSettings.IPAddress }}' \
+  webserver-3
+
+# Access the webserver using the private network
+$ curl -I http://172....:80
+
+$ docker port webserver-3
+$ docker ps
+
+$ curl -I http://localhost:8000
+
+# Let Docker manage this
+$ docker run -d --name webserver-4 -P nginx:1.10-alpine
+$ docker port webserver-3
+$ curl -I http://localhost:<PORT FOUND>
+
+# Try with your public IP
+$ curl ifconfig.co # Or use Play With Docker IP
+
+----
+
+
+
+
+
+== Docker Network
+
+== Basic Network Summary
+
+<img alt="Docker Network" src="images/docker_net.png" width=600/>
+
+
+
+
+== Docker Network
+== Docker Volumes
+
+== Docker Volumes
+
+* Quand le cycle de vie de la donnée est différent de celui du containeur
+  - Application HTML/PHP/JS - Serveur Web
+  - Données BDD - Serveur de BDD
+
+[source,bash]
+----
+$ docker run alpine ls -l /app
+$ docker run --volume /app alpine ls -l /app
+
+$ docker run -d -v /application --name ws-vol nginx:1.10-alpine
+$ docker inspect ws-vol | grep -i -A10 Mounts
+
+$ touch <SOURCE_DIR>/_data/toto # Sudo est peut être nécessaire
+$ docker exec -ti ws-vol ls -l /application/toto
+
+# Pour certain cas d'usages, mais ATTENTION ICI
+$ pwd
+$ echo "ok" > file.txt
+$ ls -l
+$ docker run -ti -v $(pwd):/partage alpine ls -l /partage
+
+----
+
+
+
+
+
+== Docker Network
+== Docker Volumes
+== Nettoyage
+
+== Un peu de nettoyage
+
+[source,bash]
+----
+$ docker run -d --name ws-trash nginx:1.10-alpine
+$ docker kill ws-trash
+$ docker rm ws-trash
+
+$ docker run -d -v /app --name ws-trash-2 nginx:1.10-alpine
+$ docker kill ws-trash-2
+$ docker rm -v ws-trash-2
+
+$ docker rmi nginx:alpine
+
+# DALECK / TERMINATOR MODE
+$ docker ps -q | xargs docker kill
+
+$ docker ps -a -q | xargs docker rm -v
+
+$ docker image ls -q | xargs docker rmi -f
+----

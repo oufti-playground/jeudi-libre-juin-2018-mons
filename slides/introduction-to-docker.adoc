@@ -3,13 +3,35 @@ include::{chaptersdir}/attributes.adoc[]
 
 = Jeudi du libre Mons: Introduction to Docker
 
-//
-// :leveloffset: +1
-//
-// include::{chaptersdir}/01-hello.adoc[]
-//
-// :leveloffset: -1
 
+== Agenda:
+
+1. Docker: 101
+2. Docker: bases
+3. Docker avancé
+4. Docker écosystème
+
+Ces slides ont du contenu piqué de Docker http://www.slideshare.net/dotCloud
+
+:leveloffset: +1
+
+include::{chaptersdir}/intro-to-docker/01-docker-101.adoc[]
+
+include::{chaptersdir}/intro-to-docker/02-docker-bases.adoc[]
+
+include::{chaptersdir}/intro-to-docker/03-docker-advanced.adoc[]
+
+include::{chaptersdir}/intro-to-docker/04-docker-ecosystem.adoc[]
+
+:leveloffset: -1
+
+
+== Containerus Bellum
+
+
+http://blog.octo.com/containerus-bellum-ou-la-chronique-des-hostilites-dans-lecosysteme-docker/
+
+<img src="images/dockerecosystem-octotechnology_v2.png" width=600/>
 
 == Next Step: Introduction to Jenkins
 

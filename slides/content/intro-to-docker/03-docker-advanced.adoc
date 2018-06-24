@@ -1,0 +1,268 @@
+
+== Docker avancé
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+
+== Plateforme : Vue globale
+
+![Docker Components Flow](images/engine-components-flow.png)
+
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+
+== Plateforme : Architecture
+
+<img alt="Docker Architecture" src="images/architecture.png" width=600/>
+
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+
+== Plateforme : Docker Hub
+
+<img alt="Docker Hub" src="images/docker-hub.png" width=600/>
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+
+== Plateforme : Docker Cloud
+
+<img alt="Docker Cloud" src="images/docker_cloud_dashboard.png" width=600/>
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+== Dockerfile
+
+== Dockerfile: Fabriquer ses propres images
+
+* `Dockerfile`: recette pour fabriquer son image
+
+```Dockerfile
+FROM debian:jessie
+MAINTAINER Damien DUPORTAL <damien.duportal@gmail.com>
+
+RUN apt-get update && apt-get install -y nginx
+
+VOLUME ["/tmp","/app"
+EXPOSE 80
+
+ENTRYPOINT ["/usr/sbin/nginx"CMD ["-g","daemon off;"
+```
+
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+== Dockerfile
+
+== Dockerfile: Fabriquer ses propres images
+
+* `docker build`: commande pour fabriquer une **image** depuis un `Dockerfile`
+
+```shell
+$ mkdir web && cd ./web
+$ vi Dockerfile # Utilisez le Dockerfile de la slide précédente
+$ docker build ./
+
+$ cd ..
+$ docker build -t web:1.0.0 ./web/
+
+$ docker run -d -P --name my-web-1 web:1.0.0
+== Affichez la page avec docker port (..) et curl (...)
+
+$ vi ./web/Dockerfile
+== Ajoutez la ligne ci-dessous
+== RUN echo Hello > /var/www/html/index.nginx-debian.html
+
+$ docker build -t web:1.1.0 ./web/
+$ docker run -d -P --name my-web-2 web:1.1.0
+== Affichez la nouvelle page avec docker port (..) et curl (...)
+
+```
+
+
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+== Dockerfile
+
+== Comment ça marche ? 1/2
+
+* Pas dans un volume ? => Union File System (AUFS/BTRFS/DeviceMapper...)
+
+* Les images "lecture seule": les écritures se font dans une nouvelle couche ("Writeable Layer")
+
+<img alt="single layer" src="images/docker-image-creation-01.png" width=400/>
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+== Dockerfile
+
+== Comment ça marche ? 2/2
+
+* On peut "committer" un "writeable layer": il devient lecture seule
+
+* Une image est donc une collection ordonnée de "layers" en lecture seule
+
+* Une instruction Dockerfile == 1 "layer" du Union FS, commité **automatiquement**
+
+<img alt="FS collection" src="images/docker-filesystems-collection.png" width=400/>
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+== Dockerfile
+== Partages
+
+== Partages: Réseau 1/2
+
+* Comment faire dialoguer 2 containeurs sans publier leurs ports
+  - Lien Serveur d'application <-> Base de données
+
+* Example avec Redis:
+
+```shell
+$ docker pull redis
+$ docker inspect redis | grep -i -A2 expose
+== Quel ports sont "exposés" ?
+
+$ docker run -d --name redissrv redis # Pas de port publié
+
+$ docker run -ti --link redissrv:dbserver redis env
+
+$ docker run -ti --link redissrv:dbserver redis bash
+root@CONTAINER $/ cat /etc/hosts
+
+$ docker run -ti --link redissrv:dbserver \
+  redis redis-cli -h dbserver -p 6379
+
+```
+
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+== Dockerfile
+== Partages
+
+== Partages: Réseau 2/2
+
+* Comment gérer du réseau qui change (adresse, port, etc.) ?
+  - Command `docker network`
+  - Drapeau `--net` pour la commande `docker run`
+
+```shell
+$ docker network --help
+$ docker network ls
+
+$ docker network create db-net-1
+$ docker network ls # Différences ?
+
+$ docker run -d --net=db-net-1 --name redissrv-2 redis
+== Pas de port publié
+
+$ docker network inspect db-net-1
+
+$ docker run -ti --rm --net=db-net-1 redis cat /etc/hosts
+== Plus de ligne référençant le serveur
+
+$ docker run -ti --rm --net=db-net-1 redis \
+  redis-cli -h redissrv-2 -p 6379
+== Les noms des containeurs sont gérées dans un serveur DNS
+== DNS: Dynamique !
+
+```
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+== Dockerfile
+== Partages
+
+== Partages: Volumes 1/2
+
+* Comment partager des volumes entre des containeurs ?
+  - Le containeur initial doit déclarer un volume
+  - Utiliser le drapeau `--volumes-from`
+
+```shell
+$ docker run -d -v /app --name pere nginx:1.10-alpine
+
+$ docker run --rm -ti --volumes-from pere debian:jessie bash
+root@CONTAINER$ echo "Hello" > /app/hello.txt
+root@CONTAINER$ exit
+
+$ docker exec -ti pere sh
+root@pere$ cd /app
+root@pere$ ls -l
+root@pere$ cat /app/foo
+root@pere$ exit
+```
+
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+== Dockerfile
+== Partages
+
+== Partages: Volumes 2/2
+
+* Tout comme pour les réseaux, docker peut gérer les volumes "à part"
+  - Commande `docker volume`
+
+```shell
+$ docker volume --help
+
+$ docker volume ls
+
+$ docker volume create --name=shared-data
+
+$ docker volume ls
+
+$ docker run --rm -ti -v shared-data:/partage alpine sh
+=/ echo "hello again" > /partage/fichier.txt
+=/ exit
+
+$ docker run --rm -ti -v shared-data:/DATA debian:jessie \
+  cat /partage/fichier.txt
+$ docker run --rm -ti -v shared-data:/DATA debian:jessie \
+  cat /DATA/fichier.txt
+```
+
+
+
+= Docker: bases
+== Docker avancé
+== Plateforme
+== Dockerfile
+== Partages
+
+== Partages: Résumé
+
+* Docker peut gérer les réseaux et volumes de fichiers
+* AVANTAGES:
+  - Convention
+  - Pas de configuration à maintenir
+  - Portabilité
