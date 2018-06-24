@@ -19,7 +19,7 @@
 :revealjs_controls: true
 :instance-sheet-url: TODO
 :box-name: jeudi-mons-workshop
-:box-url: https://TODO
+:box-url: https://github.com/
 :external-domain: localhost
 :external-port: 80
 :admin-user: butler
