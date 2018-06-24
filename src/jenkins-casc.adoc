@@ -5,18 +5,8 @@ include::{chaptersdir}/attributes.adoc[]
 
 Jenkins Configuration-as-Code
 
-++++
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
-  <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" />
-</a>
-<br />This work is licensed under a
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/">
-  Creative Commons Attribution 4.0 International License
-</a>.
-++++
+image::{imagedir}/logo-jenkins-casc.svg[height="200"]
 
-:leveloffset: +1
+== Jenkins Configuration-as-Code
 
-include::{chaptersdir}/01-hello.adoc[]
-
-:leveloffset: -1
+link:https://docs.google.com/presentation/d/1-irLGTAvMe8Fz1md1zkJtpIpYo9NItZKnsgTYnIqbZU/edit?usp=sharing[Presentation in Google Slides]
