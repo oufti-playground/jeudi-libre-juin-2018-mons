@@ -1,0 +1,142 @@
+
+[background-color="hsl(50, 89%, 74%)"]
+= Agents
+
+== What is an Agent?
+
+* A process running on a remote *node*,
+ready to execute tasks on behalf of the Jenkins master
+** Formerly known as _slave_
+
+image::{imagedir}/orchestra.jpg[height=400]
+
+== Benefits of Agents
+
+* Specific Agent Roles:
+** Custom operating system (Windows, Linux)
+** Specialized hardware (Macs, Solaris, Arm CPUs, etc.)
+
+* Horizontal Scalability of builds
+** More builds? More machines!
+
+* Diminution of "Blast Radius"
+** An agent goes down? Another takes the load
+** Jenkins Master goes down (OOM, Restart): no impact
+
+== Agent and Pipeline
+
+* A pipeline's build is executed on an *agent*
+** The keyword `agent` must be specified
+
+* Some stages can be executed on *different* agents:
+** E.g. Build on Linux, Test on Linux and Windows
+** The keyword `agent` can be specified per stage
+
+== Follow-along: Specify Agent for our Pipeline 1/2
+
+* Edit the Pipeline with the Blue Ocean Editor
+
+* Access the "Pipeline Settings" on the right section
+** TIP: If not visible, click on the "Start" node
+
+* Change the agent `any` to a *node* with the label `maven3-jdk8`
+** "any" was picking randomly an available agent
+** Note the other options
+
+* Save and run the Pipeline
+
+== Follow-along: Specify Agent for our Pipeline 2/2
+
+* Search for occurrences of `"Running on"` in the Pipeline's log
+** The file `pipeline.log` can be found in "Artifacts"
+* Let's have a look to the expected Pipeline:
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/05-Jenkinsfile-global-agent.groovy[]
+----
+
+== Exercise: Execute Deploy stage in "production"
+
+* Goal: the Stage *Deploy* has to be run in (fake) "production"
+* Tools: there is an agent with the label "production"
+* Change the Pipeline to have only the *Deploy* stage
+running on this agent
+
+== Solution: Execute Deploy stage in "production"
+
+* Validate using the occurrences of `Running on` in the `pipeline.log`
+* Let's have a look to the expected Pipeline:
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/06-Jenkinsfile-deploy-agent.groovy[]
+----
+
+== Reusing Binary: Challenge
+
+* Pipeline efficiency and security rule:
+build once, fingerprint and then reuse
+
+* Challenge: workspace is *NOT* shared across agents.
+** A new workspace is allocated for *each* stage
+
+
+== Reusing Binary: Solution
+
+* Pipeline can store artifacts from stage to stage
+** Assumption: building a binary is 1 order of magnitude slower
+than copying it on the network
+
+* Two types of artifact storages, both using a copy-to-master:
+** Permanent storage with `archiveArtifacts`.
+** Ephemeral storage with `stash` (and `unstash`),
+deletion when the build stops.
+
+== Follow-along: Reuse Jar File 1/3
+
+* Goal: we want the stages *Integration Test* and *Deploy* to reuse
+the folder `target` generated during the stage *Build*
+
+== Follow-along: Reuse Jar File 2/3
+
+* Edit the stage *Build* and add a new step:
+** Type of the new step: "Stash some files to be used later in the build"
+** Name: `generated-artifacts`
+** Include: `target/**/*` (the folder `target/` and all its content)
+
+* For both *Integration Tests* and *Deploy* stages:
+** Add a new step of type "Restore files previously stashed"
+** Set the Name to `generated-artifacts`
+** Move these steps at the *beginning* of each stage
+
+== Follow-along: Reuse Jar File 3/3
+
+* Validate using the logs of the *Deploy* stage (comparing with previous builds)
+* Let's have a look to the expected Pipeline:
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/07-Jenkinsfile-stash-unstash.groovy[]
+----
+
+== Exercise: Parallel Integration Tests
+
+* Goal: Run Integration Tests for both Java 9 and 8
+* Tools: you have 2 available "java" agents
+with the respective labels `jdk9` and `jdk8`
+* Edit the Pipeline to execute, in *parallel*,
+the integration tests on each of these agents
+** Keep the stage *Integration Tests* as parent stage
+** Name the "sub-stages" *IT Java 9* and *IT Java 8*
+** Don't forget to unstash from *Build* and to publish test reports.
+
+== Solution: Parallel Integration Tests
+
+* Validate using Test reports (compared to previous builds), and build logs
+* Let's have a look to the expected Pipeline:
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/08-Jenkinsfile-parallel.groovy[]
+----

@@ -1,0 +1,45 @@
+
+[background-color="hsl(50, 89%, 74%)"]
+= Jenkins and Blue Ocean
+
+== Jenkins
+
+image::{imagedir}/jenkins_logo.png[height="200"]
+
+* Task orchestrator
+* Open-Source software written in Java
+* One of the first and most popular Continous Integration Engine (2004)
+* Plugin based
+
+== Jenkins Pipelines
+
+image::{imagedir}/pipeline.jpg[height=200]
+
+* A tool to express your software pipeline with a DSL
+* Defined into a text file: `Jenkinsfile`
+* "Pipeline-as-code": stored into your SCM
+* != "Job DSL" (different areas)
+
+== Benefits of Jenkins Pipelines
+
+* Follows from your code workflows: branches, pull request,
+code review, even trunk-based
+* Reduces the number of jobs
+* A single execution ("build") can run on multiple machines
+* Durable: survives a Jenkins restart
+
+== Getting started with Pipeline
+
+image::{imagedir}/i-have-no-idea-what-i-am-doing.jpg[]
+
+== !
+
+image::{imagedir}/BlueOcean.jpg[]
+
+== Blue Ocean
+
+* A new developer experience for using Jenkins
+* A modern GUI written in React,
+in parallel of the "Classic UI"
+* Pipeline-centric
+* Install it with a plugin

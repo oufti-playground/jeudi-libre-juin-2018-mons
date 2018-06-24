@@ -1,0 +1,86 @@
+
+[background-color="hsl(50, 89%, 74%)"]
+= Your First Pipeline
+
+== Blue Ocean
+
+* We want to create a Pipeline from scratch using Blue Ocean.
+* Browse to your Jenkins instance and switch to Blue Ocean:
+** Click on the item "Open Blue Ocean", on the left menu
+** _Or_ link:{jenkins-url}/blue[Direct link to Blue Ocean GUI,window=_blank]
+
+== Follow along: Initialize Your First Pipeline 1/4
+
+* Follow the presenter instructions to create a new Pipeline:
+** Stored in *Git*
+** Get the *SSH* URL from the _git server_
+*** `{demoapp-repo-git-url}`
+** Jenkins is *already* allowed to access the source code:
+*** Nothing to do for SSH Key
+
+== Blue Ocean Pipeline Editor
+
+* Provides a Pipeline's graphical editor in Blue Ocean,
+with full round trip with SCM:
+** Scaffold your Pipeline, Save it, Execute it.
+* Supports existing Declarative Pipeline,
+as starting from scratch
+* Requires a compatible SCM (Git over SSH, Github, BitBucket, etc.)
+
+== Follow along: Initialize Your First Pipeline 2/4
+
+* Blue Ocean cannot find any `Jenkinsfile`
+** It opens automatically the *Pipeline Editor* for you
+
+* A red message appears saying: "a stage is needed":
+** Create a stage named *Build* by clicking the big "+"
+
+* Each stage (virtual) is composed of "steps" (implementation)
+** "At least one step is required"
+
+== Follow along: Initialize Your First Pipeline 3/4
+
+* We want the stage *Build* to have 2 steps:
+** Print the message `Building...`
+** Execute the shell script `./scripts/build.sh`
+
+* Time to run this Pipeline: click the "Save" button
+** Add a meaningful Description (commit message)
+** Commit to 'master'
+** Clic Save & Run, and see the build kicking off
+
+== Follow-along: Initialize Your First Pipeline 4/4
+
+* Take time to browse the build page in Blue Ocean
+** Click on the stage, unfold the logs...
+
+* Click the "Edit" (pen) button to go back to the editor,
+and use `CTRL + S` (On Mac: `CMD + S`),
+to switch to textual description:
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/01-Jenkinsfile-build-stage-only.groovy[]
+----
+
+== Exercise: Add 2 New Stages to your First Pipeline
+
+* Goal: add 2 new stages to your Pipeline:
+*Integration Tests*::
+runs the script `./scripts/integration-tests.sh`
+
+*Deploy*::
+runs the script `./scripts/deploy.sh`
+
+* Use the *Blue Ocean Pipeline Editor*:
+** Click on the "Edit" button (pen's icon)
+** Use the *Build* stage as example
+
+== Solution: Add 2 New Stages to your First Pipeline
+
+* Check the file `Jenkinsfile` into the SCM (*Gitea Git Server*)
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/02-Jenkinsfile-base.groovy[]
+----

@@ -1,0 +1,119 @@
+
+[background-color="hsl(50, 89%, 74%)"]
+= Pipeline: Tests and Webhooks
+
+== Follow-along: Test Reports with JUnit 1/3
+
+* We want to report test results to Jenkins
+* Let's start with Unit Test's results:
+** They are in "Junit" format,
+generated during the *Build* stage
+** XML files located in:
++
+[source,bash]
+----
+target/surefire-reports/
+----
+
+** Jenkins's "Junit" plugin is installed by default
+
+== Follow-along: Test Reports with JUnit 2/3
+
+* Open the Pipeline in *Blue Ocean Editor*
+* Edit the stage *Build*
+* Remove the _Print Message_ step
+* Add a new _Archive JUnit-formatted test results_ step
+** Set the field *TestResults* to `target/surefire-reports/{asterisk}.xml`
+* Save the pipeline and check the build
+
+== Follow-along: Test Reports with JUnit 3/3
+
+* When the build finished, check the "Tests" section
+* Let's have a look to the expected Pipeline:
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/03-Jenkinsfile-unit-tests.groovy[]
+----
+
+== Exercise: Integration Tests Report
+
+* We also want the integration test's reports
+** Generated during the *Integration Tests* stage
+** Still using JUnit, but XML files
+are generated in:
++
+[source,bash]
+----
+target/failsafe-reports/
+----
+
+* Expected status of the build: *UNSTABLE*
+
+== Solution: Integration Tests Report
+
+* What are the changes between *UNSTABLE* and *SUCCESS*?
+** Color, Test failure notification badge, etc.
+
+* Let's have a look to the expected Pipeline:
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/04-Jenkinsfile-all-tests.groovy[]
+----
+
+== Continuous Integration (CI)
+
+image::{imagedir}/fail-fast-continuous-integration.png[height=200]
+
+* Each code integration is validated by an *automated build*
+* Code is integrated *often*, at least daily, to be a non-event
+* Feedback loop to close the continous cycle
+
+== Faster Feedbacks using Webhooks
+
+* We want builds to start when:
+** A Pipeline is saved from Blue Ocean => OK
+** New code is added in the SCM => ??
+
+* A "Webhooks" is already configured:
+** _When_ new code is added into the SCM,
+** _Then_ the SCM server sends a request to notify the event
+** _And_ Jenkins reacts to this event by indexing the repository,
+and eventually starts new builds
+
+== Exercise: Fix the build
+
+* We are doing Continous Integration!
+** The build *MUST* be fixed as *top* priority
+
+* Identify the name of the failing test
+** TIP: Use Blue Ocean's "Test" tab
+
+* Use the SCM (the *Gitea Web UI*) to edit the code
+** Tests are stored into `src/test/java/hello/`
+** Each time the code is changed, a build is started
+
+== Solution: Fix the build
+
+* From
+link:{demoapp-repo-web-url}/src/master/src/test/java/hello/HelloControllerIT.java[src/test/java/hello/HelloControllerIT.java]
+** Click on "Edit"
+* Comment the line 39
+* *Un*-comment the line 40
+* *Commit* with the right message
+* The started build must be green again
+
+== Going further...
+
+
+* *Pipeline Syntax Generators*:
+** Access your job's page from the "Classic UI" and
+click on the "Pipeline Syntax" link of the left menu
+*** "Snippet Generator"
+*** "Declarative Directive Generator Generator"
+
+* *Reference documentation* on jenkins.io:
+** link:https://jenkins.io/doc/pipeline[Pipeline "Handbook",windows=blank]
+** link:https://jenkins.io/doc/book/pipeline/syntax/[Pipeline Syntax Reference,windows=blank]
+** link:https://jenkins.io/doc/pipeline/steps/[Pipeline Steps Reference,windows=blank]

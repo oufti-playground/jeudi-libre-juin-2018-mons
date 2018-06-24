@@ -1,0 +1,123 @@
+
+[background-color="hsl(50, 89%, 74%)"]
+= Pipeline Avancés
+
+== Input
+
+* Jenkins permet de "mettre en pause" l'exécution
+d'un pipeline, en attendant une validation humaine
+* Continuous Delivery / Deployment
+* Mot-clef `input`, c'est une "step" Pipeline
+** Hautement configurable:
+link:https://jenkins.io/doc/pipeline/steps/pipeline-input-step/[Documentation Step Input]
+* Généralement utilisé dans un "stage" dédié.
+** Obligatoirement avec `agent none` (pas d'exécuteur, pas de workspace)
+
+== Exercice - Validation Humaine
+
+* Ajouter une stage "approval" avant le déploiement
+
+== Solution - Validation Humaine
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/09-Jenkinsfile-interactive-input[]
+----
+
+== Conditionnal Stage
+
+* Définir l'exécution conditionnelle d'une "stage"
+* Mot clef `when`
+* Doit contenir au moins une condition parmi:
+** `branch`
+** `environment`
+** `expression`
+** Logique "built-in": `allOf`, `anyOf`, etc.
+* link:https://jenkins.io/doc/book/pipeline/syntax/#when[When Documentation]
+
+== Variables d'environments
+
+* Définir des collections de clé-valeurs,
+en tant que variables d'environement:
+** Définition globale ou par "stage"
+** Ou en utilisant `withEnv` dans un block `steps`
+pour une instruction spécifique
+
+== Exercice - Déploiement Conditionnel
+
+* N'éxecuter les "stages" *Approval* et *Deploy* que:
+** *Si* on se trouve sur la branche `master`
+** *Ou si* la variable `FORCE_DEPLOY` est à `true`
+
+== Solution - Déploiement Conditionnel
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/10-Jenkinsfile-conditional-deploy[]
+----
+
+== Paramètres
+
+* Directive `parameters` : l'utilisateur fournit des argument
+au pipeline
+* Disponible en tant que variables accessibles dans l'objet `params`
+* Oeuf & Poule : Jenkins ne peut accéder au paramètre lors dur 1er build
+
+== Exercice - Paramètres
+
+* Ajouter un paramètre `DEPLOY_MESSAGE`
+dont la valeur par défaut est `Deploy ?`
+* Ce paramètre est utilisé dans le `input`
+
+== Solution - Paramètres
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/11-Jenkinsfile-input[]
+----
+
+== Options & Configurations
+
+* *Options:* Configurer un "job" depuis le Pipeline
+* *Configuration:* Même chose dans la GUI "Legacy"
+* Mot clef `options`
+* Documentation des options:
+link:https://jenkins.io/doc/book/pipeline/syntax/#options[]
+* Certaines options comme `timeout` peuvent être appliquée
+dans un bloc `step`
+
+== Exercice - Options & Timeout Approval
+
+* On souhaite que la "stage" *Approval* attende 3 minute
+avant d'arrêter le pipeline
+* On ne veut conserver que les 5 derniers builds d'un
+pipeline: limiter l'usage disque
+
+== Solution - Options & Timeout Approval
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/12-Jenkinsfile-options[]
+----
+
+== Shared Libraries
+
+== Exercice - Shared Libraries
+
+* Create a repository `jenkins-libs`
+** Init with a file `vars/runPipeline.groovy`:
++
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/13-shared-library-basic-example[]
+----
+* Switch to legacy UI, configure the Multibranch job
+** Add the shared library
+* Adapt the pipeline to run the function in Build stage
+
+== Solution - Shared Libraries
+
+[source,groovy,subs="attributes"]
+----
+include::{pipeline-solutions}/14-Jenkinsfile-shared-lib[]
+----
