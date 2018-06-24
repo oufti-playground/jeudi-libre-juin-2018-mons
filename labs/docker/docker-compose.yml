@@ -1,13 +1,5 @@
 version: '3.4'
 
-networks:
-  default:
-    driver:
-      bridge
-  front:
-    driver:
-      bridge
-
 services:
   front:
     build: ./front/
@@ -15,40 +7,52 @@ services:
     restart: unless-stopped
     read_only: true
     ports:
-    - "${EXTERNAL_PORT}:${EXTERNAL_PORT}"
+      - "${EXTERNAL_PORT}:${EXTERNAL_PORT}"
     depends_on:
-    - jenkins
-    - gitserver
-    - devbox
-    networks:
-    - default
-    - front
+      - jenkins
+      - gitserver
+      - devbox
     volumes:
-    - nginx-tmp:/tmp
-    - nginx-cache:/var/cache/nginx
-    - nginx-run:/var/run
+      - nginx-tmp:/tmp
+      - nginx-cache:/var/cache/nginx
+      - nginx-run:/var/run
     extra_hosts:
-    - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
+      - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
     environment:
-    - EXTERNAL_DOMAIN=${EXTERNAL_DOMAIN}
-    - EXTERNAL_PORT=${EXTERNAL_PORT}
-    - REGISTRY_URL=${REGISTRY_URL}
-    - REGISTRY_USER=${COMPOSE_PROJECT_NAME:-registry_user}
+      - EXTERNAL_DOMAIN=${EXTERNAL_DOMAIN}
+      - EXTERNAL_PORT=${EXTERNAL_PORT}
+      - REGISTRY_URL=${REGISTRY_URL}
+      - REGISTRY_USER=${COMPOSE_PROJECT_NAME:-registry_user}
 
   gitserver:
     build:
       context: ./gitserver/
-      args:
-      - first_user=butler
-      - source_repo_to_mirror=https://github.com/oufti-playground/demoapp|demoapp|private|webhook
     image: ${DOCKER_USERNAME}/oufti-gitserver
+    expose:
+      - "3000" # HTTP
+      - "5022" # SSH
     restart: unless-stopped
     extra_hosts:
-    - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
+      - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
     environment:
-    - EXTERNAL_URL=http://${EXTERNAL_DOMAIN}:${EXTERNAL_PORT}/gitserver
-    - EXTERNAL_DOMAIN=${EXTERNAL_DOMAIN}
-    - LOAD_SSH_KEY_FROM_JENKINS=true
+      - EXTERNAL_URL=http://${EXTERNAL_DOMAIN}:${EXTERNAL_PORT}/gitserver
+      - EXTERNAL_DOMAIN=${EXTERNAL_DOMAIN}
+      - FIRST_USER=butler
+      - LOAD_SSH_KEY_FROM_JENKINS=true # Autoload the BlueOcean SSH Key into Gitea
+      - SOURCE_REPO_CONFIG=/tmp/repositories.json
+    volumes:
+      - /app/data
+      - ./gitserver/repositories.json:/tmp/repositories.json:ro
+    depends_on:
+      - gitserver-db
+
+  gitserver-db:
+    image: postgres:9-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=gitea
+      - POSTGRES_PASSWORD=gitea
+      - POSTGRES_DB=gitea
 
   jenkins:
     build: ./jenkins/
