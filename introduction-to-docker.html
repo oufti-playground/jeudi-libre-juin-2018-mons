@@ -1,8 +1,252 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Jeudi du libre Mons: Juin 2018</title><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" name="viewport"><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.css" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/beige.css" id="theme"><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/css/zenburn.css" rel="stylesheet"><script>var link = document.createElement( 'link' );
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Jeudi du libre Mons: Introduction to Docker</title><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" name="viewport"><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.css" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/solarized.css" id="theme"><link href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/css/zenburn.css" rel="stylesheet"><script>var link = document.createElement( 'link' );
 link.rel = 'stylesheet';
 link.type = 'text/css';
 link.href = window.location.search.match( /print-pdf/gi ) ? "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/print/pdf.css" : "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/print/paper.css";
-document.getElementsByTagName( 'head' )[0].appendChild( link );</script><!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/html5shiv.js"></script><![endif]--></head><body><div class="reveal"><div class="slides"><section class="title" data-state="title"><h1>Jeudi du libre Mons</h1><h2>Juin 2018</h2></section><div class="paragraph"><p>Introduction to Docker</p></div></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
+document.getElementsByTagName( 'head' )[0].appendChild( link );</script><!--[if lt IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/html5shiv.js"></script><![endif]--></head><body><div class="reveal"><div class="slides"><section class="title" data-state="title"><h1>Jeudi du libre Mons</h1><h2>Introduction to Docker</h2></section><section><section id="agenda"><h2>Agenda:</h2><div class="olist arabic"><ol class="arabic"><li><p>Docker: 101</p></li><li><p>Docker: bases</p></li><li><p>Docker avancé</p></li><li><p>Docker écosystème</p></li></ol></div><div class="paragraph"><p>Ces slides ont du contenu piqué de Docker <a href="http://www.slideshare.net/dotCloud" class="bare">http://www.slideshare.net/dotCloud</a></p></div></section><section id="docker_101"><h2>Docker: 101</h2></section><section id="pourquoi_docker"><h2>Pourquoi Docker ?</h2><div class="paragraph"><p>Quel est le problème que nous essayons de résoudre ?</p></div>
+<div class="paragraph"><p>![Docker Challenge](images/docker-the-challenge.png)</p></div></section><section id="matrix_from_hell"><h2>"Matrix from Hell"</h2><div class="paragraph"><p>Problème de temps <strong>exponentiel</strong></p></div>
+<div class="paragraph"><p>![Matrix-Hell](images/the-matrix-from-hell.png)</p></div></section><section id="dj_vu"><h2>Déjà vu ?</h2><div class="paragraph"><p>L&#8217;IT n&#8217;est pas la seule industrie à résoudre des problèmes&#8230;&#8203;</p></div>
+<div class="paragraph"><p>![Transport Analogy](images/also-a-matrix-from-hell.png)</p></div></section><section id="solution_le_container_intermodal"><h2>Solution: Le container intermodal</h2><div class="paragraph"><p>"Separation of Concerns"</p></div>
+<div class="paragraph"><p>![Container](images/blue-shipping-container.png)</p></div></section><section id="comment_a_marche"><h2>Comment ça marche ?</h2><div class="paragraph"><p>"Virtualisation <strong>Légère</strong>"
+![Container vs VMs](images/container_vs_vm.jpg)</p></div></section><section id="comment_a_marche_2"><h2>Comment ça marche ?</h2><div class="paragraph"><p>"Pourquoi <strong>Léger</strong>" ?</p></div>
+<div class="paragraph"><p>![Why Lightweight](images/why-docker-lightweight.jpg)</p></div></section><section id="comment_a_marche_3"><h2>Comment ça marche ?</h2><div class="ulist"><ul><li><p>Linux Kernel requis (ou presque&#8230;&#8203; Windows&#8230;&#8203;)</p></li><li><p>Linux containers: "super" chroot</p><div class="ulist"><ul><li><p>"Namespacing": isolation (users, réseau, PIDs &#8230;&#8203;)</p></li><li><p>"Control Groups": gestion et contrôle (CPU, mem &#8230;&#8203;)</p></li></ul></div></li><li><p>Système de fichier de type "Union File System"</p></li><li><p>Process <strong>PID 1</strong> et ses enfants <em>dans</em> le container</p></li></ul></div>
+<div class="paragraph"><p>![Docker Container](images/docker-image-creation-01-little.png)</p></div></section><section id="docker_workflow"><h2>Docker workflow</h2><div class="paragraph"><p>Workflow Docker basique:</p></div>
+<div class="paragraph"><p>![Docker Workflow](images/basics-of-docker-system.png)</p></div></section><section id="exemple_mise__jour_dune_application"><h2>Exemple: mise à jour d&#8217;une application</h2><div class="paragraph"><p>![Docker App Update](images/changes-and-updates.png)</p></div></section><section id="docker_inc"><h2>Docker Inc.</h2><div class="ulist"><ul><li><p>Fondé à Paris en 2008 par Solomon Hykes</p></li><li><p>Migre à San Fransisco en 2009</p></li><li><p>2013: Open-source le projet Docker</p></li><li><p>2014: dotCloud devient Docker</p></li><li><p>2016: 1 milliard de levée de fond</p></li></ul></div></section><section id="docker_project"><h2>Docker Project</h2><div class="ulist"><ul><li><p>Originellement écrit en Python au sein de dotCloud</p></li><li><p>Ré-écrit en <strong>Golang</strong> et <em>ouvert</em> en 2013 après une "PyCon"</p></li><li><p>Open Source - [Apache licence](<a href="https://github.com/docker/docker/blob/master/LICENSE" class="bare">https://github.com/docker/docker/blob/master/LICENSE</a>)</p></li><li><p>Disponible sur Github: <a href="https://github.com/docker/docker-ce" class="bare">https://github.com/docker/docker-ce</a></p></li><li><p>2017:</p><div class="ulist"><ul><li><p>Projet "Moby": <a href="https://github.com/moby/moby" class="bare">https://github.com/moby/moby</a></p></li><li><p>Docker CE/EE (Community/Enterprise)</p></li></ul></div></li><li><p>~22 K commits, +1400 contributeurs</p></li></ul></div></section><section id="rsum"><h2>Résumé</h2><div class="paragraph"><p><em>Objectif de Docker :</em></p></div>
+<div class="paragraph"><p>![Docker Goal](images/docker-build-ship-run.png)</p></div></section><section id="container_are_not_vms"><h2>Container are NOT VMs</h2><div class="paragraph"><p>"Separation of concerns": 1 "tâche" par containeur</p></div>
+<div class="paragraph"><p>![Container are NOT VMs](images/vm-and-container.png)</p></div></section><section id="vm_et_containeurs_non_exclusifs_mutuellement"><h2>VM et containeurs non exclusifs mutuellement</h2><div class="paragraph"><p>![Container are NOT VMs](images/cont-vm-not-excl.png)</p></div></section><section id="docker_bases"><h2>Docker: Bases</h2></section><section id="un_peu_daction"><h2>Un peu d&#8217;action !</h2><div class="paragraph"><p>&lt;!-- // <a href="http://play-with-docker.com/" class="bare">http://play-with-docker.com/</a> -&#8594;</p></div></section></section>
+<section><section id="docker_bases_2"><h2>Docker: bases</h2></section><section id="obtenir_docker"><h2>Obtenir Docker</h2><div class="ulist"><ul><li><p>Un bac à sable est disponible sur <a href="http://play-with-docker.com/" class="bare">http://play-with-docker.com/</a></p><div class="ulist"><ul><li><p>Cliquez sur "Login" &#8594; "docker"</p></li><li><p>Vous allez devoir vous créer un compte sur le Docker Hub</p></li><li><p>Vous aurez ensuite 4 heures pour jouer avec des "instances Docker"</p></li><li><p>Cliquez sur le bouton "Add a new instance"</p></li><li><p>Une machine démarre, vous avez accès à la ligne de commande</p></li></ul></div></li><li><p>Page officielle d&#8217;installation: <a href="https://www.docker.com/products/overview" class="bare">https://www.docker.com/products/overview</a></p><div class="ulist"><ul><li><p>Linux: Utilisez votre gestionnaire de paquetage</p></li><li><p>MacOS and Windows: des installateurs "natifs" sont proposés</p></li><li><p>Vous pouvez utiliser une VM ou un service préconfiguré dans le Cloud de votre choix (Amazon, Azure, OVH, etc.)</p></li></ul></div></li></ul></div></section><section id="vocabulaire"><h2>Vocabulaire</h2><div class="ulist"><ul><li><p><strong>Docker Image :</strong> Modèle (template) de base, représentant une application</p></li><li><p><strong>Docker Container :</strong> Unité d&#8217;exécution standard, instanciée depuis une image</p></li><li><p><strong>Docker Engine :</strong> Service responsable de créer, déployer et exécuter les containeurs Docker sur un host physique, virtuel, distant ou local</p></li><li><p><strong>Registry Service (Docker Hub or Docker Trusted Registry) :</strong>
+Service de stockage et de distribution des images</p></li></ul></div></section><section id="docker_images"><h2>Docker Images</h2><div class="ulist"><ul><li><p><strong>Docker Image :</strong> c&#8217;est le modèle de base</p></li><li><p>Nommage: <code>[REGISTRY/][NAMESPACE/]NAME[:TAG|@DIGEST]</code></p><div class="ulist"><ul><li><p>Pas de Registre ? Défaut: <code>registry.hub.docker.io</code></p></li><li><p>Pas de Namespace ? Défaut: <code>library</code></p></li><li><p>Pas de tag ? Valeur par défaut: <code>latest</code> - ATTENTION !</p></li><li><p>Digest: signature unique basée sur le contenu</p></li></ul></div></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="bash language-bash">$ docker image ls
+
+$ docker pull alpine:3.4
+$ docker image ls # Quelles différences ?
+
+$ docker pull alpine:latest
+$ docker pull jfrog-docker-reg2.bintray.io/jfrog/artifactory-oss
+$ docker image ls # Quelles différences ?
+
+$ docker tag alpine:3.4 my-alpine:3.4.0-local
+$ docker tag jfrog-docker-reg2.bintray.io/jfrog/artifactory-oss \
+  artifactory-local
+$ docker image ls # Quelles différences ?</code></pre></div></div></section><section id="docker_containers_12"><h2>Docker Containers 1/2</h2><div class="ulist"><ul><li><p><strong>Docker Containers :</strong> c&#8217;est l&#8217;unité d&#8217;exécution, instanciée depuis une image.</p></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="bash language-bash">$ docker ps
+$ docker run alpine:3.4 echo "Bonjour depuis un containeur"
+
+$ cat /etc/os-release
+$ docker run -ti alpine:3.4 /bin/sh
+#/ cat /etc/os-release
+#/ whoami
+#/ ps aux
+#/ exit
+
+$ docker run -d nginx:1.10-alpine
+$ docker run -d --name webserver-1 nginx:1.10-alpine
+$ docker ps
+
+$ docker inspect nginx:1.10-alpine  # IMAGE
+$ docker inspect webserver-1        # Container
+
+# Explorons d'autres options
+$ docker ps -a
+$ docker ps -q</code></pre></div></div></section><section id="docker_containers_22"><h2>Docker Containers 2/2</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="bash language-bash"># Cycle de vie
+$ docker run -d --name webserver-2 nginx:1.10-alpine
+$ docker ps
+$ docker stop webserver-2
+$ docker ps
+$ docker start webserver-2
+$ docker ps
+$ docker kill webserver-2
+$ docker ps
+
+# Accès au containeur
+$ docker run -d --name db-server postgres
+$ docker ps
+
+$ ps faux
+
+$ docker exec db-server ps faux
+
+$ docker exec -ti db-server sh
+root@5da9f26d72c3:/# ps faux
+root@5da9f26d72c3:/# exit</code></pre></div></div></section><section id="docker_network"><h2>Docker Network</h2><div class="ulist"><ul><li><p>Docker utilise du <strong>NAT</strong> par défaut:</p></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="bash language-bash">$ docker run -d --name webserver-3 -p 8000:80 nginx:1.10-alpine
+
+$ docker inspect --format '{{ .NetworkSettings.IPAddress }}' \
+  webserver-3
+
+# Access the webserver using the private network
+$ curl -I http://172....:80
+
+$ docker port webserver-3
+$ docker ps
+
+$ curl -I http://localhost:8000
+
+# Let Docker manage this
+$ docker run -d --name webserver-4 -P nginx:1.10-alpine
+$ docker port webserver-3
+$ curl -I http://localhost:&lt;PORT FOUND&gt;
+
+# Try with your public IP
+$ curl ifconfig.co # Or use Play With Docker IP</code></pre></div></div></section><section id="docker_network_2"><h2>Docker Network</h2></section><section id="basic_network_summary"><h2>Basic Network Summary</h2><div class="paragraph"><p>&lt;img alt="Docker Network" src="images/docker_net.png" width=600/&gt;</p></div></section><section id="docker_network_3"><h2>Docker Network</h2></section><section id="docker_volumes"><h2>Docker Volumes</h2></section><section id="docker_volumes_2"><h2>Docker Volumes</h2><div class="ulist"><ul><li><p>Quand le cycle de vie de la donnée est différent de celui du containeur</p><div class="ulist"><ul><li><p>Application HTML/PHP/JS - Serveur Web</p></li><li><p>Données BDD - Serveur de BDD</p></li></ul></div></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="bash language-bash">$ docker run alpine ls -l /app
+$ docker run --volume /app alpine ls -l /app
+
+$ docker run -d -v /application --name ws-vol nginx:1.10-alpine
+$ docker inspect ws-vol | grep -i -A10 Mounts
+
+$ touch &lt;SOURCE_DIR&gt;/_data/toto # Sudo est peut être nécessaire
+$ docker exec -ti ws-vol ls -l /application/toto
+
+# Pour certain cas d'usages, mais ATTENTION ICI
+$ pwd
+$ echo "ok" &gt; file.txt
+$ ls -l
+$ docker run -ti -v $(pwd):/partage alpine ls -l /partage</code></pre></div></div></section><section id="docker_network_4"><h2>Docker Network</h2></section><section id="docker_volumes_3"><h2>Docker Volumes</h2></section><section id="nettoyage"><h2>Nettoyage</h2></section><section id="un_peu_de_nettoyage"><h2>Un peu de nettoyage</h2><div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="bash language-bash">$ docker run -d --name ws-trash nginx:1.10-alpine
+$ docker kill ws-trash
+$ docker rm ws-trash
+
+$ docker run -d -v /app --name ws-trash-2 nginx:1.10-alpine
+$ docker kill ws-trash-2
+$ docker rm -v ws-trash-2
+
+$ docker rmi nginx:alpine
+
+# DALECK / TERMINATOR MODE
+$ docker ps -q | xargs docker kill
+
+$ docker ps -a -q | xargs docker rm -v
+
+$ docker image ls -q | xargs docker rmi -f</code></pre></div></div></section><section id="docker_avanc"><h2>Docker avancé</h2></section></section>
+<section><section id="docker_bases_3"><h2>Docker: bases</h2></section><section id="docker_avanc_2"><h2>Docker avancé</h2></section><section id="plateforme"><h2>Plateforme</h2></section><section id="plateforme_vue_globale"><h2>Plateforme : Vue globale</h2><div class="paragraph"><p>![Docker Components Flow](images/engine-components-flow.png)</p></div></section></section>
+<section><section id="docker_bases_4"><h2>Docker: bases</h2></section><section id="docker_avanc_3"><h2>Docker avancé</h2></section><section id="plateforme_2"><h2>Plateforme</h2></section><section id="plateforme_architecture"><h2>Plateforme : Architecture</h2><div class="paragraph"><p>&lt;img alt="Docker Architecture" src="images/architecture.png" width=600/&gt;</p></div></section></section>
+<section><section id="docker_bases_5"><h2>Docker: bases</h2></section><section id="docker_avanc_4"><h2>Docker avancé</h2></section><section id="plateforme_3"><h2>Plateforme</h2></section><section id="plateforme_docker_hub"><h2>Plateforme : Docker Hub</h2><div class="paragraph"><p>&lt;img alt="Docker Hub" src="images/docker-hub.png" width=600/&gt;</p></div></section></section>
+<section><section id="docker_bases_6"><h2>Docker: bases</h2></section><section id="docker_avanc_5"><h2>Docker avancé</h2></section><section id="plateforme_4"><h2>Plateforme</h2></section><section id="plateforme_docker_cloud"><h2>Plateforme : Docker Cloud</h2><div class="paragraph"><p>&lt;img alt="Docker Cloud" src="images/docker_cloud_dashboard.png" width=600/&gt;</p></div></section></section>
+<section><section id="docker_bases_7"><h2>Docker: bases</h2></section><section id="docker_avanc_6"><h2>Docker avancé</h2></section><section id="plateforme_5"><h2>Plateforme</h2></section><section id="dockerfile"><h2>Dockerfile</h2></section><section id="dockerfile_fabriquer_ses_propres_images"><h2>Dockerfile: Fabriquer ses propres images</h2><div class="ulist"><ul><li><p><code>Dockerfile</code>: recette pour fabriquer son image</p></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="Dockerfile language-Dockerfile">FROM debian:jessie
+MAINTAINER Damien DUPORTAL &lt;damien.duportal@gmail.com&gt;
+
+RUN apt-get update &amp;&amp; apt-get install -y nginx
+
+VOLUME ["/tmp","/app"
+EXPOSE 80
+
+ENTRYPOINT ["/usr/sbin/nginx"CMD ["-g","daemon off;"</code></pre></div></div></section></section>
+<section><section id="docker_bases_8"><h2>Docker: bases</h2></section><section id="docker_avanc_7"><h2>Docker avancé</h2></section><section id="plateforme_6"><h2>Plateforme</h2></section><section id="dockerfile_2"><h2>Dockerfile</h2></section><section id="dockerfile_fabriquer_ses_propres_images_2"><h2>Dockerfile: Fabriquer ses propres images</h2><div class="ulist"><ul><li><p><code>docker build</code>: commande pour fabriquer une <strong>image</strong> depuis un <code>Dockerfile</code></p></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="shell language-shell">$ mkdir web &amp;&amp; cd ./web
+$ vi Dockerfile # Utilisez le Dockerfile de la slide précédente
+$ docker build ./
+
+$ cd ..
+$ docker build -t web:1.0.0 ./web/
+
+$ docker run -d -P --name my-web-1 web:1.0.0
+== Affichez la page avec docker port (..) et curl (...)
+
+$ vi ./web/Dockerfile
+== Ajoutez la ligne ci-dessous
+== RUN echo Hello &gt; /var/www/html/index.nginx-debian.html
+
+$ docker build -t web:1.1.0 ./web/
+$ docker run -d -P --name my-web-2 web:1.1.0
+== Affichez la nouvelle page avec docker port (..) et curl (...)</code></pre></div></div></section></section>
+<section><section id="docker_bases_9"><h2>Docker: bases</h2></section><section id="docker_avanc_8"><h2>Docker avancé</h2></section><section id="plateforme_7"><h2>Plateforme</h2></section><section id="dockerfile_3"><h2>Dockerfile</h2></section><section id="comment_a_marche_12"><h2>Comment ça marche ? 1/2</h2><div class="ulist"><ul><li><p>Pas dans un volume ? &#8658; Union File System (AUFS/BTRFS/DeviceMapper&#8230;&#8203;)</p></li><li><p>Les images "lecture seule": les écritures se font dans une nouvelle couche ("Writeable Layer")</p></li></ul></div>
+<div class="paragraph"><p>&lt;img alt="single layer" src="images/docker-image-creation-01.png" width=400/&gt;</p></div></section></section>
+<section><section id="docker_bases_10"><h2>Docker: bases</h2></section><section id="docker_avanc_9"><h2>Docker avancé</h2></section><section id="plateforme_8"><h2>Plateforme</h2></section><section id="dockerfile_4"><h2>Dockerfile</h2></section><section id="comment_a_marche_22"><h2>Comment ça marche ? 2/2</h2><div class="ulist"><ul><li><p>On peut "committer" un "writeable layer": il devient lecture seule</p></li><li><p>Une image est donc une collection ordonnée de "layers" en lecture seule</p></li><li><p>Une instruction Dockerfile == 1 "layer" du Union FS, commité <strong>automatiquement</strong></p></li></ul></div>
+<div class="paragraph"><p>&lt;img alt="FS collection" src="images/docker-filesystems-collection.png" width=400/&gt;</p></div></section></section>
+<section><section id="docker_bases_11"><h2>Docker: bases</h2></section><section id="docker_avanc_10"><h2>Docker avancé</h2></section><section id="plateforme_9"><h2>Plateforme</h2></section><section id="dockerfile_5"><h2>Dockerfile</h2></section><section id="partages"><h2>Partages</h2></section><section id="partages_rseau_12"><h2>Partages: Réseau 1/2</h2><div class="ulist"><ul><li><p>Comment faire dialoguer 2 containeurs sans publier leurs ports</p><div class="ulist"><ul><li><p>Lien Serveur d&#8217;application &lt;&#8594; Base de données</p></li></ul></div></li><li><p>Example avec Redis:</p></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="shell language-shell">$ docker pull redis
+$ docker inspect redis | grep -i -A2 expose
+== Quel ports sont "exposés" ?
+
+$ docker run -d --name redissrv redis # Pas de port publié
+
+$ docker run -ti --link redissrv:dbserver redis env
+
+$ docker run -ti --link redissrv:dbserver redis bash
+root@CONTAINER $/ cat /etc/hosts
+
+$ docker run -ti --link redissrv:dbserver \
+  redis redis-cli -h dbserver -p 6379</code></pre></div></div></section></section>
+<section><section id="docker_bases_12"><h2>Docker: bases</h2></section><section id="docker_avanc_11"><h2>Docker avancé</h2></section><section id="plateforme_10"><h2>Plateforme</h2></section><section id="dockerfile_6"><h2>Dockerfile</h2></section><section id="partages_2"><h2>Partages</h2></section><section id="partages_rseau_22"><h2>Partages: Réseau 2/2</h2><div class="ulist"><ul><li><p>Comment gérer du réseau qui change (adresse, port, etc.) ?</p><div class="ulist"><ul><li><p>Command <code>docker network</code></p></li><li><p>Drapeau <code>--net</code> pour la commande <code>docker run</code></p></li></ul></div></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="shell language-shell">$ docker network --help
+$ docker network ls
+
+$ docker network create db-net-1
+$ docker network ls # Différences ?
+
+$ docker run -d --net=db-net-1 --name redissrv-2 redis
+== Pas de port publié
+
+$ docker network inspect db-net-1
+
+$ docker run -ti --rm --net=db-net-1 redis cat /etc/hosts
+== Plus de ligne référençant le serveur
+
+$ docker run -ti --rm --net=db-net-1 redis \
+  redis-cli -h redissrv-2 -p 6379
+== Les noms des containeurs sont gérées dans un serveur DNS
+== DNS: Dynamique !</code></pre></div></div></section></section>
+<section><section id="docker_bases_13"><h2>Docker: bases</h2></section><section id="docker_avanc_12"><h2>Docker avancé</h2></section><section id="plateforme_11"><h2>Plateforme</h2></section><section id="dockerfile_7"><h2>Dockerfile</h2></section><section id="partages_3"><h2>Partages</h2></section><section id="partages_volumes_12"><h2>Partages: Volumes 1/2</h2><div class="ulist"><ul><li><p>Comment partager des volumes entre des containeurs ?</p><div class="ulist"><ul><li><p>Le containeur initial doit déclarer un volume</p></li><li><p>Utiliser le drapeau <code>--volumes-from</code></p></li></ul></div></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="shell language-shell">$ docker run -d -v /app --name pere nginx:1.10-alpine
+
+$ docker run --rm -ti --volumes-from pere debian:jessie bash
+root@CONTAINER$ echo "Hello" &gt; /app/hello.txt
+root@CONTAINER$ exit
+
+$ docker exec -ti pere sh
+root@pere$ cd /app
+root@pere$ ls -l
+root@pere$ cat /app/foo
+root@pere$ exit</code></pre></div></div></section></section>
+<section><section id="docker_bases_14"><h2>Docker: bases</h2></section><section id="docker_avanc_13"><h2>Docker avancé</h2></section><section id="plateforme_12"><h2>Plateforme</h2></section><section id="dockerfile_8"><h2>Dockerfile</h2></section><section id="partages_4"><h2>Partages</h2></section><section id="partages_volumes_22"><h2>Partages: Volumes 2/2</h2><div class="ulist"><ul><li><p>Tout comme pour les réseaux, docker peut gérer les volumes "à part"</p><div class="ulist"><ul><li><p>Commande <code>docker volume</code></p></li></ul></div></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="shell language-shell">$ docker volume --help
+
+$ docker volume ls
+
+$ docker volume create --name=shared-data
+
+$ docker volume ls
+
+$ docker run --rm -ti -v shared-data:/partage alpine sh
+=/ echo "hello again" &gt; /partage/fichier.txt
+=/ exit
+
+$ docker run --rm -ti -v shared-data:/DATA debian:jessie \
+  cat /partage/fichier.txt
+$ docker run --rm -ti -v shared-data:/DATA debian:jessie \
+  cat /DATA/fichier.txt</code></pre></div></div></section></section>
+<section><section id="docker_bases_15"><h2>Docker: bases</h2></section><section id="docker_avanc_14"><h2>Docker avancé</h2></section><section id="plateforme_13"><h2>Plateforme</h2></section><section id="dockerfile_9"><h2>Dockerfile</h2></section><section id="partages_5"><h2>Partages</h2></section><section id="partages_rsum"><h2>Partages: Résumé</h2><div class="ulist"><ul><li><p>Docker peut gérer les réseaux et volumes de fichiers</p></li><li><p>AVANTAGES:</p><div class="ulist"><ul><li><p>Convention</p></li><li><p>Pas de configuration à maintenir</p></li><li><p>Portabilité</p></li></ul></div></li></ul></div></section><section id="docker_cosystme"><h2>Docker: Écosystème</h2></section></section>
+<section><section id="docker_bases_16"><h2>Docker: bases</h2></section><section id="docker_avanc_15"><h2>Docker avancé</h2></section><section id="docker_cosystme_2"><h2>Docker: Écosystème</h2></section><section id="compose"><h2>Compose</h2></section><section id="compose_12"><h2>Compose 1/2</h2><div class="ulist"><ul><li><p>Compose est un client Docker, qui va exécuter les commandes pour vous</p></li><li><p>Source: fichier au format YAML:</p></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape>version: "2"
+
+volumes:
+  db-data:
+
+networks:
+  front-tier:
+  back-tier:
+
+services:
+  vote:
+    build: ./vote
+    ports:
+      - "5000:80"
+    networks:
+      - front-tier
+      - back-tier
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - db-data:/var/redis
+    networks:
+      - back-tier</code></pre></div></div></section></section>
+<section><section id="docker_bases_17"><h2>Docker: bases</h2></section><section id="docker_avanc_16"><h2>Docker avancé</h2></section><section id="docker_cosystme_3"><h2>Docker: Écosystème</h2></section><section id="compose_2"><h2>Compose</h2></section><section id="compose_22"><h2>Compose 2/2</h2><div class="ulist"><ul><li><p>Commande <code>docker-compose</code></p></li><li><p>Gestion intelligente des cycles de vie:</p><div class="ulist"><ul><li><p>Mise à jour d&#8217;une image sans toucher au contenu du data volume</p></li></ul></div></li><li><p>Scaling des containeurs</p><div class="ulist"><ul><li><p>Ne gère PAS le routage pour vous !</p></li></ul></div></li><li><p>Futur: intelligence vers le Docker Daemon avec la commande <code>docker service</code></p><div class="ulist"><ul><li><p>Conversion des YAML vers le Docker Daemon</p></li></ul></div></li></ul></div></section></section>
+<section><section id="docker_bases_18"><h2>Docker: bases</h2></section><section id="docker_avanc_17"><h2>Docker avancé</h2></section><section id="docker_cosystme_4"><h2>Docker: Écosystème</h2></section><section id="compose_3"><h2>Compose</h2></section><section id="swarm"><h2>Swarm</h2></section><section id="swarm_12"><h2>Swarm 1/2</h2><div class="paragraph"><p>![Swarm](images/docker-swarm-1.jpg)</p></div></section></section>
+<section><section id="docker_bases_19"><h2>Docker: bases</h2></section><section id="docker_avanc_18"><h2>Docker avancé</h2></section><section id="docker_cosystme_5"><h2>Docker: Écosystème</h2></section><section id="compose_4"><h2>Compose</h2></section><section id="swarm_2"><h2>Swarm</h2></section><section id="swarm_22"><h2>Swarm 2/2</h2><div class="paragraph"><p>&lt;img alt="Swarm Arch" src="images/swarm-arch.png" width=600/&gt;</p></div></section></section>
+<section id="containerus_bellum"><h2>Containerus Bellum</h2><div class="paragraph"><p><a href="http://blog.octo.com/containerus-bellum-ou-la-chronique-des-hostilites-dans-lecosysteme-docker/" class="bare">http://blog.octo.com/containerus-bellum-ou-la-chronique-des-hostilites-dans-lecosysteme-docker/</a></p></div>
+<div class="paragraph"><p>&lt;img src="images/dockerecosystem-octotechnology_v2.png" width=600/&gt;</p></div></section>
+<section id="next_step_introduction_to_jenkins"><h2>Next Step: Introduction to Jenkins</h2><div class="paragraph"><p><a href="introduction-to-jenkins.html" target="_blank">Click here for to open next section</a></p></div></section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
 Reveal.initialize({
   // Display controls in the bottom right corner
   controls: true,
@@ -57,7 +301,7 @@ Reveal.initialize({
   previewLinks: false,
   // Theme (e.g., beige, black, league, night, serif, simple, sky, solarized, white)
   // NOTE setting the theme in the config no longer works in reveal.js 3.x
-  //theme: Reveal.getQueryHash().theme || 'beige',
+  //theme: Reveal.getQueryHash().theme || 'solarized',
   // Transition style (e.g., none, fade, slide, convex, concave, zoom)
   transition: Reveal.getQueryHash().transition || 'slide',
   // Transition speed (e.g., default, fast, slow)
