@@ -21,7 +21,7 @@
 :box-name: jeudi-mons-workshop
 :box-url: https://TODO
 :external-domain: localhost
-:external-port: 10000
+:external-port: 80
 :admin-user: butler
 :homepage-url: http://{external-domain}:{external-port}
 :jenkins-url: {homepage-url}/jenkins
