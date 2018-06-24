@@ -4,7 +4,7 @@ all: documents verify
 # Generate docuemnts inside a container, all *.adoc in parallel
 documents:
 	@docker run --rm \
-		-v $(CURDIR)/src:/documents \
+		-v $(CURDIR)/slides:/documents \
 		-v $(CURDIR)/dist:/dist \
 		asciidoctor/docker-asciidoctor:latest bash -c \
 			"find /documents -type f -name '*.adoc' -maxdepth 1 \

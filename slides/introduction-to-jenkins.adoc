@@ -1,0 +1,19 @@
+:chaptersdir: ./content
+include::{chaptersdir}/attributes.adoc[]
+
+= Jeudi du libre Mons: Introduction to Jenkins
+
+:leveloffset: +1
+
+// include::{chaptersdir}/03-jenkins-and-blue-ocean.adoc[]
+// include::{chaptersdir}/04-your-first-pipeline.adoc[]
+// include::{chaptersdir}/05-pipeline-tests-and-webhooks.adoc[]
+// include::{chaptersdir}/06-agents.adoc[]
+// include::{chaptersdir}/08-pipeline-avances.adoc[]
+
+:leveloffset: -1
+
+
+== Next Step: Jenkins and Containers
+
+link:jenkins-and-containers.html[Click here for to open next section,window=_blank]

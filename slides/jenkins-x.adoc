@@ -1,9 +1,7 @@
 :chaptersdir: ./content
 include::{chaptersdir}/attributes.adoc[]
 
-= Jeudi du libre Mons: Juin 2018
-
-Jenkins-X
+= Jeudi du libre Mons: Jenkins-X
 
 //
 // :leveloffset: +1

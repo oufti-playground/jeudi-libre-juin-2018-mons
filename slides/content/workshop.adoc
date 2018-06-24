@@ -2,6 +2,13 @@
 [background-color="hsl(50, 89%, 74%)"]
 = Workshop
 
+== Workshop Agenda
+
+. link:introduction-to-docker.html[Introduction to Docker,window=_blank]
+. link:introduction-to-jenkins.html[Introduction to Jenkins,window=_blank]
+. link:jenkins-and-containers.html[Jenkins and Containers,window=_blank]
+. link:bring-your-own-challenge.html[Jenkins and Containers,window=_blank]
+
 == Goals
 
 * A practical overview on the pattern usages of Containers in the world of Jenkins

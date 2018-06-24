@@ -40,15 +40,3 @@ image::{imagedir}/commitstrip.png[width="200"]
 *** Jenkins "Old School" ? / "New Generation" ?
 *** GitLab ? TeamCity ? TravisCI ? Bamboo ?
 *** Something Else?
-
-
-== Agenda
-
-* Workshop:
-. link:introduction-to-docker.html[Introduction to Docker,window=_blank]
-. link:introduction-to-jenkins.html[Introduction to Jenkins,window=_blank]
-. link:jenkins-and-containers.html[Jenkins and Containers,window=_blank]
-
-* Presentations:
-. link:jenkins-casc.html[Jenkins: Configuration-as-Code,window=_blank]
-. link:jenkins-x.html[Jenkins-X,window=_blank]

@@ -1,9 +1,7 @@
 :chaptersdir: ./content
 include::{chaptersdir}/attributes.adoc[]
 
-= Jeudi du libre Mons: Juin 2018
-
-Introduction to Docker
+= Jeudi du libre Mons: Bring your own challenge
 
 //
 // :leveloffset: +1

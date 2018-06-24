@@ -5,10 +5,10 @@
 :linkattrs:
 :idprefix:
 :imagedir: ./images
-:chaptersdir: ./chapters
+:chaptersdir: ./content
 :pipeline-solutions: ./pipeline-solutions
 :revealjsdir: https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0
-:revealjs_theme: beige
+:revealjs_theme: solarized
 :revealjs_history: true
 :revealjs_margin: 0.1
 :revealjs_width: 1280
