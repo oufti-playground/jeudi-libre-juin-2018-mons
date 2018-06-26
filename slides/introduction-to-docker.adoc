@@ -6,8 +6,8 @@ include::{chaptersdir}/attributes.adoc[]
 
 == Agenda:
 
-1. Docker: 101
-2. Docker: bases
+1. What is Docker?
+2. Docker 101
 3. Docker avancé
 4. Docker écosystème
 
@@ -15,9 +15,9 @@ Ces slides ont du contenu piqué de Docker http://www.slideshare.net/dotCloud
 
 :leveloffset: +1
 
-include::{chaptersdir}/intro-to-docker/01-docker-101.adoc[]
+include::{chaptersdir}/intro-to-docker/01-what-is-docker.adoc[]
 
-include::{chaptersdir}/intro-to-docker/02-docker-bases.adoc[]
+include::{chaptersdir}/intro-to-docker/02-docker-101.adoc[]
 
 include::{chaptersdir}/intro-to-docker/03-docker-advanced.adoc[]
 

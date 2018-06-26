@@ -1,0 +1,43 @@
+
+=  What is Docker?
+
+== What is the problem?
+
+
+image::{imagedir}/the-matrix-from-hell.png[]
+
+== Solution: The "intermodal" container
+
+"Separation of Concerns"
+
+image::{imagedir}/blue-shipping-container.png[]
+
+== Containers compared to VMs
+
+**Ligthweight** Virtualization
+
+// "Separation of concerns": 1 "tâche" par containeur
+
+image::{imagedir}/VM-diagram.png[]
+
+== Containers **with** VMs
+
+Not mutually exclusive
+
+image::{imagedir}/cont-vm-not-excl.png[]
+
+== Docker Components
+
+image::{imagedir}/docker-components.png[width=900]
+
+//
+// == Under the Hood
+//
+// image::{imagedir}/docker-under-the-hood.jpg[]
+
+// * Linux Kernel requis (ou presque... Windows...)
+// * Linux containers: "super" chroot
+//   - "Namespacing": isolation (users, réseau, PIDs ...)
+//   - "Control Groups": gestion et contrôle (CPU, mem ...)
+// * Système de fichier de type "Union File System"
+// * Process **PID 1** et ses enfants _dans_ le container
