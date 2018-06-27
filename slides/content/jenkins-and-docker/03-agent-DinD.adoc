@@ -1,0 +1,54 @@
+= Dockerized Agent for Docker in Docker
+
+== Architecture
+
+----
+* node
+|_ docker daemon
+   |_ jenkins agent <- privileged container
+   |_ docker client -----
+   |_ docker daemon  <--|
+----
+
+* 'docker' command is called from a dockerized jenkins
+
+== More Info
+
+* link:https://github.com/jpetazzo/dind[Dind]
+* link:https://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/[Do not use docker in docker for ci]
+* link:https://hub.docker.com/_/docker/[Docker Hub]
+
+== Limitations
+
+* Depends on Docker Daemon configuration and filesystem used
+** Require '--privileged' to disable Linux Security Modules
+Like AppArmor(Outer)/Selinux(Inner docker)
+** Inner/Outer Docker filesystem compatibility (AUFS on AUFS doesn't work)
+** Storage Driver, outer Docker run on normal FS and inner docker on a copy-on-write system
+
+== Jenkinsfile
+
+----
+pipeline {
+ agent any
+ stages {
+   stage('Build and Publish') {
+     steps {
+       scm
+       sh 'docker build -t my_image .'
+       sh 'docker push my_image'
+     }
+   }
+ }
+}
+----
+
+== Evaluation Criteria
+
+* Security?  Bad
+* Simplicity?  Good
+* Speed:  
+** Dynamic Agent? Bad
+** Static Agent? Good
+* Resource Efficiency? Bad
+

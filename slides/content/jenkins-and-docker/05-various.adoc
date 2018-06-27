@@ -1,0 +1,103 @@
+
+== Docker as a build tool without Docker Daemon
+
+* link:https://github.com/GoogleContainerTools/kaniko[Kaniko]
+* link:https://github.com/cyphar/orca-build[orca-build]
+* link:https://github.com/genuinetools/img[jessfraz/img]
+
+== Schema
+
+image::{imagedir}/build_docker_without_docker.jpg[Build Docker Without Docker]
+
+
+== Come back to "what do we want?"
+
+* Docker to deploy Jenkins master/agent
+* Docker as Jenkins dynamic agents
+* Docker as build environment 
+* Docker as a build tool
+
+== What about running Jenkins in 
+
+* Kubernetes
+* Mesos
+* Swarm
+
+
+== Kubernetes
+link:https://plugins.jenkins.io/kubernetes[Kubernetes]
+
+== Jenkinsfile
+
+----
+pipeline {
+  agent {
+    kubernetes {
+      label 'mypod'
+      defaultContainer 'jnlp'
+      yaml """
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    some-label: some-label-value
+spec:
+  containers:
+  - name: maven
+    image: maven:alpine
+    command:
+    - cat
+    tty: true
+  - name: busybox
+    image: busybox
+    command:
+    - cat
+    tty: true
+"""
+    }
+  }
+  stages {
+    stage('Run maven') {
+      steps {
+        container('maven') {
+          sh 'mvn -version'
+        }
+        container('busybox') {
+          sh '/bin/busybox'
+        }
+      }
+    }
+  }
+}
+----
+
+== Evaluation Criteria
+
+* Security? Good
+* Simplicity? Bad
+* Speed: Good
+* Resource Efficiency: Good
+
+== Mesos
+link:https://plugins.jenkins.io/mesos[Mesos]
+
+== Jenkinsfile
+
+----
+node('mylabel') {
+    wrap([$class: 'MesosSingleUseSlave']) {
+        // build actions
+    }
+}
+----
+
+== Evaluation Criteria
+
+* Security? Good
+* Simplicity? Bad
+* Speed: Good
+* Resource Efficiency: Good
+
+
+== Swarm
+link:https://plugins.jenkins.io/docker-swarm[Swarm]
