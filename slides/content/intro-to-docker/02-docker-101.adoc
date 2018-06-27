@@ -1,83 +1,68 @@
 
 = Docker 101
 
-== Obtenir Docker
+== Get Docker
 
-* Un bac à sable est disponible sur http://play-with-docker.com/
-  - Cliquez sur "Login" -> "docker"
-  - Vous allez devoir vous créer un compte sur le Docker Hub
-  - Vous aurez ensuite 4 heures pour jouer avec des "instances Docker"
-  - Cliquez sur le bouton "Add a new instance"
-  - Une machine démarre, vous avez accès à la ligne de commande
-* Page officielle d'installation: https://www.docker.com/products/overview
-  - Linux: Utilisez votre gestionnaire de paquetage
-  - MacOS and Windows: des installateurs "natifs" sont proposés
-  - Vous pouvez utiliser une VM ou un service préconfiguré dans le Cloud de votre choix (Amazon, Azure, OVH, etc.)
+* **Workshop**: use the _DevBox_ service
+* Official installation: link:https://www.docker.com/products/overview[]
+* Online Playground: link:http://play-with-docker.com/[]
 
-== Vocabulaire
+== Vocabulary
 
-* **Docker Image :** Modèle (template) de base, représentant une application
+* **Image:** Template (immutable) of the file system for your container
 
-* **Docker Container :** Unité d'exécution standard, instanciée depuis une image
+* **Container:** Basic unit or runtime execution
 
-* **Docker Engine :** Service responsable de créer, déployer et exécuter les containeurs Docker sur un host physique, virtuel, distant ou local
+* **Engine/Daemon:** Service for managing images and containers,
+running on a machine referenced as "Docker Host"
 
-* **Registry Service (Docker Hub or Docker Trusted Registry) :**
-Service de stockage et de distribution des images
+* **Registry:** Web service providing catalog of images to multiple Engines.
 
-== Docker Images
-
-* **Docker Image :** c'est le modèle de base
-
-* Nommage: `[REGISTRY/][NAMESPACE/]NAME[:TAG|@DIGEST]`
-  - Pas de Registre ? Défaut: `registry.hub.docker.io`
-  - Pas de Namespace ? Défaut: `library`
-  - Pas de tag ? Valeur par défaut: `latest` - ATTENTION !
-  - Digest: signature unique basée sur le contenu
+== Docker Images 1/2
 
 [source,bash]
 ----
 $ docker image ls
 
-$ docker pull alpine:3.4
+$ docker pull alpine:3.7
 $ docker image ls # Quelles différences ?
 
 $ docker pull alpine:latest
 $ docker pull jfrog-docker-reg2.bintray.io/jfrog/artifactory-oss
 $ docker image ls # Quelles différences ?
 
-$ docker tag alpine:3.4 my-alpine:3.4.0-local
+$ docker tag alpine:3.7 my-alpine:3.7.0-local
 $ docker tag jfrog-docker-reg2.bintray.io/jfrog/artifactory-oss \
   artifactory-local
 $ docker image ls # Quelles différences ?
 ----
 
-== Docker Containers 1/2
+== Docker Images 2/2
 
-* **Docker Containers :** c'est l'unité d'exécution, instanciée depuis une image.
+* Naming: `[REGISTRY/][NAMESPACE/]NAME[:TAG|@DIGEST]`
+  - No registry? Default: `index.docker.io`
+  - No Namespace? Default: `library`
+  - No tag? Default: `latest` - ATTENTION !
+  - Digest: signature unique basée sur le contenu
+
+== Docker Containers 1/2
 
 [source,bash]
 ----
+# One shot
 $ docker ps
-$ docker run alpine:3.4 echo "Bonjour depuis un containeur"
+$ docker run alpine:3.7 /bin/echo Hello
 
+# Foreground (aka. interactive)
 $ cat /etc/os-release
-$ docker run -ti alpine:3.4 /bin/sh
-#/ cat /etc/os-release
-#/ whoami
-#/ ps aux
-#/ exit
+$ docker run -ti debian:stable-slim /bin/sh
+> cat /etc/os-release
+> exit
 
-$ docker run -d nginx:1.10-alpine
-$ docker run -d --name webserver-1 nginx:1.10-alpine
+# Background
+$ docker run -d nginx:alpine
+$ docker run -d --name webserver-1 nginx:alpine
 $ docker ps
-
-$ docker inspect nginx:1.10-alpine  # IMAGE
-$ docker inspect webserver-1        # Container
-
-# Explorons d'autres options
-$ docker ps -a
-$ docker ps -q
 ----
 
 == Docker Containers 2/2
@@ -85,32 +70,25 @@ $ docker ps -q
 [source,bash]
 ----
 # Cycle de vie
-$ docker run -d --name webserver-2 nginx:1.10-alpine
+$ docker stop webserver-1
 $ docker ps
-$ docker stop webserver-2
+$ docker start webserver-1
 $ docker ps
-$ docker start webserver-2
-$ docker ps
-$ docker kill webserver-2
+$ docker kill webserver-1
 $ docker ps
 
 # Accès au containeur
-$ docker run -d --name db-server postgres
-$ docker ps
-
+$ docker run -d --name db-server postgres:alpine
 $ ps faux
-
-$ docker exec db-server ps faux
-
 $ docker exec -ti db-server sh
 root@5da9f26d72c3:/# ps faux
 root@5da9f26d72c3:/# exit
-
+$ docker exec db-server ps faux
 ----
 
 == Docker Network
 
-* Docker utilise du **NAT** par défaut:
+* Docker utilise du **NAT** par Default:
 
 [source,bash]
 ----
