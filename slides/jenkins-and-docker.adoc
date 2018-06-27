@@ -1,0 +1,18 @@
+:chaptersdir: ./content
+include::{chaptersdir}/attributes.adoc[]
+
+= Jeudi du libre Mons: Introduction to Jenkins
+
+:leveloffset: +1
+
+include::{chaptersdir}/jenkins-and-docker/01-intro.adoc[]
+include::{chaptersdir}/jenkins-and-docker/02-no-docker-agent.adoc[]
+include::{chaptersdir}/jenkins-and-docker/03-agent-DinD.adoc[]
+include::{chaptersdir}/jenkins-and-docker/04-agent-DnD.adoc[]
+include::{chaptersdir}/jenkins-and-docker/05-various.adoc[]
+
+:leveloffset: -1
+
+== Next Step: Jenkins and Containers
+
+link:jenkins-and-containers.html[Click here for to open next section,window=_blank]

@@ -1,0 +1,113 @@
+= Docker next to Docker: Socket
+
+== Architecture
+
+----
+* node
+|_ docker daemon  <-----------------
+   |_ jenkins agent                |
+      |_ docker client -------------
+----
+
+== Limitations
+
+* From a security point of view, no difference than DiND
+* Bad container isolation
+* Container Orchestrator has no visibility on resource usage, inside to evaluate CJE on mesos
+link:https://support.cloudbees.com/hc/en-us/articles/360001566111-Set-up-a-Docker-in-Docker-Agent-Template[Blogpost]
+
+== Jenkinsfile
+
+----
+pipeline{
+  agent {
+    docker{
+      image 'ruby:2.3'
+      args '-v /var/run/docker.sock:/var/run/docker.sock --group-add=982'
+    }
+  }
+  stages{
+    stage('Build'){
+      steps{
+       sh 'rake build'
+      }
+    }
+  }
+}
+----
+
+== Evaluation Criteria (1/2)
+
+* Security? Bad
+* Simplicity?  Bad
+* Job Speed:
+** Dynamic Agent: Bad/Good
+** Static Agent: Good
+
+== Evaluation Criteria (2/2)
+
+* Resource Efficiency?  Bad/Good
+** VM ? Bad
+** Cluster? Good
+
+== Docker next to Docker: Api
+
+== Architecture
+
+----
+* node1
+|_ docker daemon
+   |_ jenkins agent
+      |_ docker client -----------------------
+* node2                                      |
+|_ docker daemon  <---------------------------
+
+----
+
+== Limitation
+
+* Docker server and the Jenkins agent must use the same filesystem, so that the workspace can be mounted.
+* Enforce you to be Cloud Native 
+
+== Jenkinsfile
+
+[source,groovy]
+----
+pipeline{
+  agent {
+    docker{
+      image 'ruby:2.3'
+      args '-H DOCKER_HOST="tcp://node2:2376"'
+    }
+  }
+  stages{
+    stage('Build'){
+      steps{
+       sh 'rake build'
+      }
+    }
+  }
+}
+~
+----
+
+== Evaluation Criteria (1/2)
+
+* Security:
+** Local Docker Daemon? Bad
+** Remote Docker Daemon? Good
+* Simplicity?  Bad
+
+== Evaluation Criteria (1/2)
+
+* Speed:  
+** Dynamic Agent: Bad
+** Static Agent? Good
+* Resource Efficiency
+** Shared Cluster? Good
+** Others? Bad
+
+== Example
+
+link:https://www.cloudbees.com/products/cloudbees-codeship[Codeship] uses this approach
+
