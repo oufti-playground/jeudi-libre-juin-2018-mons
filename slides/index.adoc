@@ -15,16 +15,11 @@ include::{chaptersdir}/attributes.adoc[]
 
 :leveloffset: +1
 
-include::{chaptersdir}/hello.adoc[]
-include::{chaptersdir}/workshop.adoc[]
+include::{chaptersdir}/intro/hello.adoc[]
+include::{chaptersdir}/intro/workshop.adoc[]
+include::{chaptersdir}/intro/presentation.adoc[]
 
-:leveloffset: -1
-
-== Next Step: Introduction to Docker
+== Next Step: Docker 101
 
 link:introduction-to-docker.html[Click here for to open next section,window=_blank]
 
-== Presentations Agenda
-
-. link:jenkins-casc.html[Jenkins: Configuration-as-Code,window=_blank]
-. link:jenkins-x.html[Jenkins-X,window=_blank]

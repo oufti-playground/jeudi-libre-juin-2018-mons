@@ -1,0 +1,10 @@
+[background-color="hsl(50, 89%, 74%)"]
+= Presentation
+
+== Start at 7PM
+
+== Presentations Agenda
+
+. link:jenkins-casc.html[Jenkins: Configuration-as-Code,window=_blank]
+. link:jenkins-x.html[Jenkins-X,window=_blank]
+

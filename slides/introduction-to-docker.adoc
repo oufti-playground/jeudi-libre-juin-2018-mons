@@ -11,7 +11,7 @@ include::{chaptersdir}/attributes.adoc[]
 3. Docker avancé
 4. Docker écosystème
 
-Ces slides ont du contenu piqué de Docker http://www.slideshare.net/dotCloud
+This content was highly inspired by Michael Bryzek link://www.slideshare.net/dotCloud[slides]
 
 :leveloffset: +1
 
