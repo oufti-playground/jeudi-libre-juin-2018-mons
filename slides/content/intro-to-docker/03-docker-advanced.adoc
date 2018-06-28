@@ -86,40 +86,22 @@ root@parent$ exit
 
 == Advanced Volumes 2/2
 
-* Tout comme pour les réseaux, docker peut gérer les volumes "à part"
-  - Commande `docker volume`
+* The Docker CLI can manage "volumes" as objects:
 
-```shell
+[source,bash]
+----
 $ docker volume --help
-
 $ docker volume ls
 
 $ docker volume create --name=shared-data
-
 $ docker volume ls
 
-$ docker run --rm -ti -v shared-data:/partage alpine sh
-=/ echo "hello again" > /partage/fichier.txt
+$ docker run --rm -ti -v shared-data:/share alpine sh
+=/ echo "hello again" > /share/fichier.txt
 =/ exit
 
 $ docker run --rm -ti -v shared-data:/DATA debian:jessie \
-  cat /partage/fichier.txt
+  cat /share/fichier.txt
 $ docker run --rm -ti -v shared-data:/DATA debian:jessie \
   cat /DATA/fichier.txt
-```
-
-
-
-= Docker: bases
-== Docker avancé
-== Plateforme
-== Dockerfile
-== Partages
-
-== Partages: Résumé
-
-* Docker peut gérer les réseaux et volumes de fichiers
-* AVANTAGES:
-  - Convention
-  - Pas de configuration à maintenir
-  - Portabilité
+----
