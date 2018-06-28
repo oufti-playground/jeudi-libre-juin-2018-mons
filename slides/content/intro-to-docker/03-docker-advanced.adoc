@@ -1,6 +1,6 @@
 = Docker Advanced
 
-// docker inspect nginx:1.10-alpine  # IMAGE
+// docker inspect nginx:stable-alpine  # IMAGE
 // docker inspect webserver-1        # Container
 // docker ps -a
 // docker ps -q
@@ -181,7 +181,7 @@ $ docker run -ti --rm --net=db-net-1 redis \
   - Utiliser le drapeau `--volumes-from`
 
 ```shell
-$ docker run -d -v /app --name pere nginx:1.10-alpine
+$ docker run -d -v /app --name pere nginx:stable-alpine
 
 $ docker run --rm -ti --volumes-from pere debian:jessie bash
 root@CONTAINER$ echo "Hello" > /app/hello.txt

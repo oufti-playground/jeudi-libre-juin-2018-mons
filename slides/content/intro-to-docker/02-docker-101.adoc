@@ -27,16 +27,16 @@ running on a machine referenced as "Docker Host"
 $ docker image ls
 
 $ docker pull alpine:3.7
-$ docker image ls # Quelles différences ?
+$ docker image ls # Which differences?
 
 $ docker pull alpine:latest
 $ docker pull jfrog-docker-reg2.bintray.io/jfrog/artifactory-oss
-$ docker image ls # Quelles différences ?
+$ docker image ls # Which differences?
 
 $ docker tag alpine:3.7 my-alpine:3.7.0-local
 $ docker tag jfrog-docker-reg2.bintray.io/jfrog/artifactory-oss \
   artifactory-local
-$ docker image ls # Quelles différences ?
+$ docker image ls # Which differences?
 ----
 
 == Docker Images 2/2
@@ -44,8 +44,8 @@ $ docker image ls # Quelles différences ?
 * Naming: `[REGISTRY/][NAMESPACE/]NAME[:TAG|@DIGEST]`
   - No registry? Default: `index.docker.io`
   - No Namespace? Default: `library`
-  - No tag? Default: `latest` - ATTENTION !
-  - Digest: signature unique basée sur le contenu
+  - No tag? Default: `latest` - Warning !
+  - Digest: signed hash based on content
 
 == Docker Container
 
@@ -64,8 +64,8 @@ $ docker run -ti debian:stable-slim /bin/sh
 > exit
 
 # Background
-$ docker run -d nginx:alpine
-$ docker run -d --name webserver-1 nginx:alpine
+$ docker run -d nginx:stable-alpine
+$ docker run -d --name webserver-1 nginx:stable-alpine
 $ docker ps
 ----
 
@@ -92,81 +92,61 @@ $ docker exec db-server ps faux
 
 == Docker Network
 
-== Docker Network
-
-* Docker uses Natting by default:
-
 [source,bash]
 ----
-$ docker run -d --name webserver-3 -p 8000:80 nginx:1.10-alpine
-
+$ docker run -d --name webserver-2 -p 8000:80 nginx:stable-alpine
 $ docker inspect --format '{{ .NetworkSettings.IPAddress }}' \
-  webserver-3
+  webserver-2
 
 # Access the webserver using the private network
 $ curl -I http://172....:80
-
-$ docker port webserver-3
+$ docker port webserver-2
 $ docker ps
-
+# Access the webserver using another interface
 $ curl -I http://localhost:8000
-
-# Let Docker manage this
-$ docker run -d --name webserver-4 -P nginx:1.10-alpine
+# Let Docker manage this mess
+$ docker run -d --name webserver-3 -P nginx:stable-alpine
 $ docker port webserver-3
 $ curl -I http://localhost:<PORT FOUND>
-
-# Try with your public IP
-$ curl ifconfig.co # Or use Play With Docker IP
-
 ----
 
-== Basic Network Summary
+== Docker Network: Summary
 
-<img alt="Docker Network" src="images/docker_net.png" width=600/>
-
+image::{imagedir}/docker_net.png[width=800]
 
 == Docker Volumes
-
-* When Data lifecycle is different than Container lifecycle
-* When Shared data accross containers
-* When state is required (staful application)
-** Database
-** User Session
-** ...
 
 [source,bash]
 ----
 $ docker run alpine ls -l /app
 $ docker run --volume /app alpine ls -l /app
 
-$ docker run -d -v /application --name ws-vol nginx:1.10-alpine
+$ docker run -d -v /application --name ws-vol nginx:stable-alpine
 $ docker inspect ws-vol | grep -i -A10 Mounts
 
-$ touch <SOURCE_DIR>/_data/toto # Sudo est peut être nécessaire
+$ touch <SOURCE_DIR>/_data/toto # Sudo might be required
 $ docker exec -ti ws-vol ls -l /application/toto
 
-# Pour certain cas d'usages, mais ATTENTION ICI
+# Experimenting...
 $ pwd
 $ echo "ok" > file.txt
 $ ls -l
-$ docker run -ti -v $(pwd):/partage alpine ls -l /partage
-
+$ docker run -ti -v $(pwd):/share alpine ls -l /share
 ----
 
 == Tips: Cleaning
 
 [source,bash]
 ----
-$ docker run -d --name ws-trash nginx:1.10-alpine
+$ docker run -d --name ws-trash nginx:stable-alpine
 $ docker kill ws-trash
 $ docker rm ws-trash
 
-$ docker run -d -v /app --name ws-trash-2 nginx:1.10-alpine
+$ docker run -d -v /app --name ws-trash-2 nginx:stable-alpine
 $ docker kill ws-trash-2
 $ docker rm -v ws-trash-2
 
-$ docker rmi nginx:alpine
+$ docker rmi nginx:stable-alpine
 
 # DALECK / TERMINATOR MODE
 $ docker ps -q | xargs docker kill
