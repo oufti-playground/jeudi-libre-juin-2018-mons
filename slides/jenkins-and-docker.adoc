@@ -1,7 +1,7 @@
 :chaptersdir: ./content
 include::{chaptersdir}/attributes.adoc[]
 
-= Jeudi du libre Mons: Introduction to Jenkins
+= Jeudi du libre Mons: Jenkins and Docker
 
 :leveloffset: +1
 
@@ -15,4 +15,4 @@ include::{chaptersdir}/jenkins-and-docker/05-various.adoc[]
 
 == Next Step: Jenkins and Containers
 
-link:jenkins-and-containers.html[Click here for to open next section,window=_blank]
+link:bring_your_own_challenge.html[Click here to open the next section,window=_blank]

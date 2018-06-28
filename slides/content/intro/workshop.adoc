@@ -6,7 +6,7 @@
 
 . link:introduction-to-docker.html[Docker 101,window=_blank]
 . link:introduction-to-jenkins.html[Jenkins 101,window=_blank]
-. link:jenkins-and-containers.html[Jenkins and Docker,window=_blank]
+. link:jenkins-and-docker.html[Jenkins and Docker,window=_blank]
 . link:bring-your-own-challenge.html[Bring Your Own Challenge,window=_blank]
 
 == Goals
