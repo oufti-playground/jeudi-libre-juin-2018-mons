@@ -1,59 +1,33 @@
-
-== Docker avancé
-
-
+= Docker Advanced
 
 // docker inspect nginx:1.10-alpine  # IMAGE
 // docker inspect webserver-1        # Container
 // docker ps -a
 // docker ps -q
 
-= Docker: bases
-== Docker avancé
-== Plateforme
-
-== Plateforme : Vue globale
+== Plateform
+== Platform: Global View
 
 ![Docker Components Flow](images/engine-components-flow.png)
 
-
-
-= Docker: bases
-== Docker avancé
-== Plateforme
-
-== Plateforme : Architecture
+=== Platform: Architecture
 
 <img alt="Docker Architecture" src="images/architecture.png" width=600/>
 
-
-
-= Docker: bases
-== Docker avancé
-== Plateforme
-
-== Plateforme : Docker Hub
+=== Platform: Docker Hub
 
 <img alt="Docker Hub" src="images/docker-hub.png" width=600/>
 
 
-= Docker: bases
-== Docker avancé
-== Plateforme
-
-== Plateforme : Docker Cloud
+=== Plateforme : Docker Cloud
 
 <img alt="Docker Cloud" src="images/docker_cloud_dashboard.png" width=600/>
 
-
-= Docker: bases
-== Docker avancé
-== Plateforme
 == Dockerfile
 
-== Dockerfile: Fabriquer ses propres images
+== Dockerfile: Describe your own image
 
-* `Dockerfile`: recette pour fabriquer son image
+* `Dockerfile`: Docker recipe
 
 ```Dockerfile
 FROM debian:jessie
@@ -67,16 +41,9 @@ EXPOSE 80
 ENTRYPOINT ["/usr/sbin/nginx"CMD ["-g","daemon off;"
 ```
 
+== Dockerfile: Build your own image
 
-
-= Docker: bases
-== Docker avancé
-== Plateforme
-== Dockerfile
-
-== Dockerfile: Fabriquer ses propres images
-
-* `docker build`: commande pour fabriquer une **image** depuis un `Dockerfile`
+* `docker build`: Build an image from a Dockerfile
 
 ```shell
 $ mkdir web && cd ./web
@@ -87,9 +54,11 @@ $ cd ..
 $ docker build -t web:1.0.0 ./web/
 
 $ docker run -d -P --name my-web-1 web:1.0.0
+
 == Affichez la page avec docker port (..) et curl (...)
 
 $ vi ./web/Dockerfile
+
 == Ajoutez la ligne ci-dessous
 == RUN echo Hello > /var/www/html/index.nginx-debian.html
 
