@@ -14,6 +14,6 @@ include::{chaptersdir}/intro-to-jenkins/04-agents.adoc[]
 :leveloffset: -1
 
 
-== Next Step: Jenkins and Containers
+== Next Step: Jenkins and Docker
 
-link:jenkins-and-containers.html[Click here for to open next section,window=_blank]
+link:jenkins-and-docker.html[Click here to open next section,window=_blank]
