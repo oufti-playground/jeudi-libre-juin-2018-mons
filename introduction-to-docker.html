@@ -128,25 +128,22 @@ $ docker exec -ti parent sh
 root@parent$ cd /app
 root@parent$ ls -l
 root@parent$ cat /app/foo
-root@parent$ exit</code></pre></div></div></section><section id="advanced_volumes_22"><h2>Advanced Volumes 2/2</h2><div class="ulist"><ul><li><p>Tout comme pour les réseaux, docker peut gérer les volumes "à part"</p><div class="ulist"><ul><li><p>Commande <code>docker volume</code></p></li></ul></div></li></ul></div>
-<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="shell language-shell">$ docker volume --help
-
+root@parent$ exit</code></pre></div></div></section><section id="advanced_volumes_22"><h2>Advanced Volumes 2/2</h2><div class="ulist"><ul><li><p>The Docker CLI can manage "volumes" as objects:</p></li></ul></div>
+<div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape class="bash language-bash">$ docker volume --help
 $ docker volume ls
 
 $ docker volume create --name=shared-data
-
 $ docker volume ls
 
-$ docker run --rm -ti -v shared-data:/partage alpine sh
-=/ echo "hello again" &gt; /partage/fichier.txt
+$ docker run --rm -ti -v shared-data:/share alpine sh
+=/ echo "hello again" &gt; /share/fichier.txt
 =/ exit
 
 $ docker run --rm -ti -v shared-data:/DATA debian:jessie \
-  cat /partage/fichier.txt
+  cat /share/fichier.txt
 $ docker run --rm -ti -v shared-data:/DATA debian:jessie \
-  cat /DATA/fichier.txt</code></pre></div></div></section></section>
-<section><section id="docker_bases"><h2>Docker: bases</h2></section><section id="docker_avanc"><h2>Docker avancé</h2></section><section id="plateforme"><h2>Plateforme</h2></section><section id="dockerfile"><h2>Dockerfile</h2></section><section id="partages"><h2>Partages</h2></section><section id="partages_rsum"><h2>Partages: Résumé</h2><div class="ulist"><ul><li><p>Docker peut gérer les réseaux et volumes de fichiers</p></li><li><p>AVANTAGES:</p><div class="ulist"><ul><li><p>Convention</p></li><li><p>Pas de configuration à maintenir</p></li><li><p>Portabilité</p></li></ul></div></li></ul></div></section><section id="docker_cosystme"><h2>Docker: Écosystème</h2></section></section>
-<section><section id="docker_bases_2"><h2>Docker: bases</h2></section><section id="docker_avanc_2"><h2>Docker avancé</h2></section><section id="docker_cosystme_2"><h2>Docker: Écosystème</h2></section><section id="compose"><h2>Compose</h2></section><section id="compose_12"><h2>Compose 1/2</h2><div class="ulist"><ul><li><p>Compose est un client Docker, qui va exécuter les commandes pour vous</p></li><li><p>Source: fichier au format YAML:</p></li></ul></div>
+  cat /DATA/fichier.txt</code></pre></div></div></section><section id="docker_cosystme"><h2>Docker: Écosystème</h2></section></section>
+<section><section id="docker_bases"><h2>Docker: bases</h2></section><section id="docker_avanc"><h2>Docker avancé</h2></section><section id="docker_cosystme_2"><h2>Docker: Écosystème</h2></section><section id="compose"><h2>Compose</h2></section><section id="compose_12"><h2>Compose 1/2</h2><div class="ulist"><ul><li><p>Compose est un client Docker, qui va exécuter les commandes pour vous</p></li><li><p>Source: fichier au format YAML:</p></li></ul></div>
 <div class="listingblock"><div class="content"><pre class="highlight"><code data-noescape>version: "2"
 
 volumes:
@@ -171,9 +168,9 @@ services:
       - db-data:/var/redis
     networks:
       - back-tier</code></pre></div></div></section></section>
-<section><section id="docker_bases_3"><h2>Docker: bases</h2></section><section id="docker_avanc_3"><h2>Docker avancé</h2></section><section id="docker_cosystme_3"><h2>Docker: Écosystème</h2></section><section id="compose_2"><h2>Compose</h2></section><section id="compose_22"><h2>Compose 2/2</h2><div class="ulist"><ul><li><p>Commande <code>docker-compose</code></p></li><li><p>Gestion intelligente des cycles de vie:</p><div class="ulist"><ul><li><p>Mise à jour d&#8217;une image sans toucher au contenu du data volume</p></li></ul></div></li><li><p>Scaling des containeurs</p><div class="ulist"><ul><li><p>Ne gère PAS le routage pour vous !</p></li></ul></div></li><li><p>Futur: intelligence vers le Docker Daemon avec la commande <code>docker service</code></p><div class="ulist"><ul><li><p>Conversion des YAML vers le Docker Daemon</p></li></ul></div></li></ul></div></section></section>
-<section><section id="docker_bases_4"><h2>Docker: bases</h2></section><section id="docker_avanc_4"><h2>Docker avancé</h2></section><section id="docker_cosystme_4"><h2>Docker: Écosystème</h2></section><section id="compose_3"><h2>Compose</h2></section><section id="swarm"><h2>Swarm</h2></section><section id="swarm_12"><h2>Swarm 1/2</h2><div class="paragraph"><p>![Swarm](images/docker-swarm-1.jpg)</p></div></section></section>
-<section><section id="docker_bases_5"><h2>Docker: bases</h2></section><section id="docker_avanc_5"><h2>Docker avancé</h2></section><section id="docker_cosystme_5"><h2>Docker: Écosystème</h2></section><section id="compose_4"><h2>Compose</h2></section><section id="swarm_2"><h2>Swarm</h2></section><section id="swarm_22"><h2>Swarm 2/2</h2><div class="paragraph"><p>&lt;img alt="Swarm Arch" src="images/swarm-arch.png" width=600/&gt;</p></div></section></section>
+<section><section id="docker_bases_2"><h2>Docker: bases</h2></section><section id="docker_avanc_2"><h2>Docker avancé</h2></section><section id="docker_cosystme_3"><h2>Docker: Écosystème</h2></section><section id="compose_2"><h2>Compose</h2></section><section id="compose_22"><h2>Compose 2/2</h2><div class="ulist"><ul><li><p>Commande <code>docker-compose</code></p></li><li><p>Gestion intelligente des cycles de vie:</p><div class="ulist"><ul><li><p>Mise à jour d&#8217;une image sans toucher au contenu du data volume</p></li></ul></div></li><li><p>Scaling des containeurs</p><div class="ulist"><ul><li><p>Ne gère PAS le routage pour vous !</p></li></ul></div></li><li><p>Futur: intelligence vers le Docker Daemon avec la commande <code>docker service</code></p><div class="ulist"><ul><li><p>Conversion des YAML vers le Docker Daemon</p></li></ul></div></li></ul></div></section></section>
+<section><section id="docker_bases_3"><h2>Docker: bases</h2></section><section id="docker_avanc_3"><h2>Docker avancé</h2></section><section id="docker_cosystme_4"><h2>Docker: Écosystème</h2></section><section id="compose_3"><h2>Compose</h2></section><section id="swarm"><h2>Swarm</h2></section><section id="swarm_12"><h2>Swarm 1/2</h2><div class="paragraph"><p>![Swarm](images/docker-swarm-1.jpg)</p></div></section></section>
+<section><section id="docker_bases_4"><h2>Docker: bases</h2></section><section id="docker_avanc_4"><h2>Docker avancé</h2></section><section id="docker_cosystme_5"><h2>Docker: Écosystème</h2></section><section id="compose_4"><h2>Compose</h2></section><section id="swarm_2"><h2>Swarm</h2></section><section id="swarm_22"><h2>Swarm 2/2</h2><div class="paragraph"><p>&lt;img alt="Swarm Arch" src="images/swarm-arch.png" width=600/&gt;</p></div></section></section>
 <section id="containerus_bellum"><h2>Containerus Bellum</h2><div class="paragraph"><p><a href="http://blog.octo.com/containerus-bellum-ou-la-chronique-des-hostilites-dans-lecosysteme-docker/" class="bare">http://blog.octo.com/containerus-bellum-ou-la-chronique-des-hostilites-dans-lecosysteme-docker/</a></p></div>
 <div class="paragraph"><p>&lt;img src="images/dockerecosystem-octotechnology_v2.png" width=600/&gt;</p></div></section>
 <section id="next_step_introduction_to_jenkins"><h2>Next Step: Introduction to Jenkins</h2><div class="paragraph"><p><a href="introduction-to-jenkins.html" target="_blank">Click here for to open next section</a></p></div></section></div></div><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/lib/js/head.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.js"></script><script>// See https://github.com/hakimel/reveal.js#configuration for a full list of configuration options
