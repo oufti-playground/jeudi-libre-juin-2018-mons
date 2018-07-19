@@ -15,7 +15,7 @@ Please find below a working example of `docker-compose` definition:
 [source,yaml]
 ----
 gitserver:
-  image: cloudbees/training-gitserver
+  build: ./gitserver
   restart: unless-stopped
   expose:
     - "3000" # HTTP

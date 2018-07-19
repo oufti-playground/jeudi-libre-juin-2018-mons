@@ -1,4 +1,4 @@
-FROM gitea/gitea:1.4.2
+FROM gitea/gitea:1.4.3
 
 # We need tini to reap child processes
 RUN apk add --no-cache jq tini
@@ -23,8 +23,8 @@ EXPOSE 5022
 ENTRYPOINT ["/sbin/tini","-g","--"]
 CMD ["bash","/usr/local/bin/entrypoint.sh"]
 
-# Pre-configure the embeded Gitserver when you build an image inheriting from this one
-ONBUILD ARG first_user
-ONBUILD ARG SOURCE_REPO_CONFIG
-ONBUILD RUN bash /app/setup-gitea.sh start-gitserver
-ONBUILD VOLUME "/app/data"
+HEALTHCHECK --start-period=10s --interval=10s --retries=3 --timeout=2s \
+  CMD wget localhost:3000 --spider
+
+HEALTHCHECK --start-period=10s --interval=10s --retries=3 --timeout=2s \
+  CMD nc -z localhost 5022

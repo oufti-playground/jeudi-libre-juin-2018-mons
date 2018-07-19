@@ -12,23 +12,21 @@ services:
       - jenkins
       - gitserver
       - devbox
-    volumes:
-      - nginx-tmp:/tmp
-      - nginx-cache:/var/cache/nginx
-      - nginx-run:/var/run
+    networks:
+      - default
+      - front
     extra_hosts:
       - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
     environment:
       - EXTERNAL_DOMAIN=${EXTERNAL_DOMAIN}
       - EXTERNAL_PORT=${EXTERNAL_PORT}
+      - REGISTRY_URL=${REGISTRY_URL}
+      - REGISTRY_USER=${COMPOSE_PROJECT_NAME:-registry_user}
 
   gitserver:
     build:
       context: ./gitserver/
     image: ${DOCKER_USERNAME}/oufti-gitserver
-    expose:
-      - "3000" # HTTP
-      - "5022" # SSH
     restart: unless-stopped
     extra_hosts:
       - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
@@ -41,16 +39,26 @@ services:
     volumes:
       - /app/data
       - ./gitserver/repositories.json:/tmp/repositories.json:ro
-    depends_on:
-      - gitserver-db
+    healthcheck:
+      test: ["CMD", "wget", "http://butler:butler@localhost:3000/butler/demoapp","--spider"]
+      interval: 10s
+      timeout: 2s
+      retries: 3
+      start_period: 10s
 
   gitserver-db:
-    image: postgres:9-alpine
+    image: postgres:10-alpine
     restart: unless-stopped
     environment:
       - POSTGRES_USER=gitea
       - POSTGRES_PASSWORD=gitea
       - POSTGRES_DB=gitea
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost","5432"]
+      interval: 10s
+      timeout: 2s
+      retries: 3
+      start_period: 10s
 
   jenkins:
     build: ./jenkins/
@@ -58,15 +66,13 @@ services:
     read_only: true
     restart: unless-stopped
     volumes:
-    - jenkins-data:/var/jenkins_home
-    - /tmp
-    - jenkins-war:/var/jenkins_home/war
-    - jenkins-plugins:/var/jenkins_home/plugins
+      - /var/jenkins_home
+      - /tmp
     extra_hosts:
-    - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
+      - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
     environment:
-    - JENKINS_EXTERNAL_URL=http://${EXTERNAL_DOMAIN}:${EXTERNAL_PORT}/jenkins
-    - JENKINS_OPTS=--prefix=/jenkins
+      - JENKINS_EXTERNAL_URL=http://${EXTERNAL_DOMAIN}:${EXTERNAL_PORT}/jenkins
+      - JENKINS_OPTS=--prefix=/jenkins
 
   jenkins-production-node:
     build:
@@ -75,15 +81,10 @@ services:
     image: ${DOCKER_USERNAME}/oufti-jenkins-production-node
     restart: unless-stopped
     privileged: true
-    volumes:
-    - jenkins-production-node-data:/home/jenkins
-    - /var/run
-    - /etc
-    - /tmp
     extra_hosts:
-    - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
+      - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
     environment:
-    - JENKINS_SLAVE_SSH_PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key
+      - JENKINS_SLAVE_SSH_PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key
 
   jenkins-maven-jdk8-node:
     build:
@@ -92,29 +93,21 @@ services:
     image: ${DOCKER_USERNAME}/oufti-jenkins-maven-jdk8-node
     restart: unless-stopped
     privileged: true
-    volumes:
-    - jenkins-maven-jdk8-node-data:/home/jenkins
-    - /etc
-    - /tmp
     extra_hosts:
-    - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
+      - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
     environment:
-    - JENKINS_SLAVE_SSH_PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key
+      - JENKINS_SLAVE_SSH_PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key
 
   jenkins-maven-jdk9-node:
     build: ./jenkins-maven-jdk9-node/
     image: ${DOCKER_USERNAME}/oufti-jenkins-maven-jdk9-node
     restart: unless-stopped
     read_only: true
-    volumes:
-    - jenkins-maven-jdk9-node-data:/home/jenkins
-    - /etc
-    - /tmp
     extra_hosts:
-    - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
+      - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
     environment:
-    - START_DOCKER=no
-    - JENKINS_SLAVE_SSH_PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key
+      - START_DOCKER=no
+      - JENKINS_SLAVE_SSH_PUBKEY=ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key
 
   devbox:
     build:
@@ -124,10 +117,8 @@ services:
     restart: unless-stopped
     read_only: true
     privileged: true
-    volumes:
-    - devbox-tmp:/tmp
     extra_hosts:
-    - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
+      - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
 
   docker-service:
     build: ./docker-service/
@@ -136,51 +127,4 @@ services:
     read_only: true
     command: tcp-listen:2375,reuseaddr,fork unix:/docker.sock
     volumes:
-    - /var/run/docker.sock:/docker.sock
-
-# TMPFS Volumes from https://docs.docker.com/engine/reference/commandline/volume_create/#driver-specific-options
-volumes:
-  nginx-tmp:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: rw,noexec,size=10m
-  nginx-cache:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: rw,noexec,size=10m
-  nginx-run:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: rw,noexec,size=100k
-  jenkins-data:
-    driver: local
-  jenkins-war:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: rw,noexec,size=100m
-  jenkins-plugins:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: rw,noexec,size=400m
-  devbox-tmp:
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: rw,noexec,size=10m
-  jenkins-production-node-data:
-    driver: local
-  jenkins-maven-jdk8-node-data:
-    driver: local
-  jenkins-maven-jdk9-node-data:
-    driver: local
+      - /var/run/docker.sock:/docker.sock
