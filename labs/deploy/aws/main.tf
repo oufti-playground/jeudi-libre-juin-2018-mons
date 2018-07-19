@@ -33,7 +33,15 @@ resource "aws_security_group" "lab_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  ## Allow ingress on HTTP(S) and SSH 
+  ## Allow SSH to the outside for cloning repos
+  egress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ## Allow ingress on HTTP(S) and SSH
   ingress {
     from_port   = 80
     to_port     = 80
