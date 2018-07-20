@@ -12,16 +12,11 @@ services:
       - jenkins
       - gitserver
       - devbox
-    networks:
-      - default
-      - front
     extra_hosts:
       - "${EXTERNAL_DOMAIN}:${DOCKER_BRIDGE_IP}"
     environment:
       - EXTERNAL_DOMAIN=${EXTERNAL_DOMAIN}
       - EXTERNAL_PORT=${EXTERNAL_PORT}
-      - REGISTRY_URL=${REGISTRY_URL}
-      - REGISTRY_USER=${COMPOSE_PROJECT_NAME:-registry_user}
 
   gitserver:
     build:
