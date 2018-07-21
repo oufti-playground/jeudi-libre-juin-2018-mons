@@ -21,7 +21,7 @@
 :box-name: jeudi-mons-workshop
 :box-url: https://github.com/
 :external-domain: localhost
-:external-port: 80
+:external-port: 8080
 :admin-user: butler
 :homepage-url: http://{external-domain}:{external-port}
 :jenkins-url: {homepage-url}/jenkins

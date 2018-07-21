@@ -5,7 +5,7 @@ export BOX_FILE ?= $(CURDIR)/jeudi-mons-workshop.box
 GIT_SUBPROJECT := alpine2docker
 CUSTOMIZE_DIR := $(GIT_SUBPROJECT)/customize
 TMP_LAB_DIR := ./tmp-lab
-TESTS_URL ?= http://localhost
+TESTS_URL ?= http://localhost:8080
 export DOCKER_USERNAME ?= dduportal
 
 all: box lab
